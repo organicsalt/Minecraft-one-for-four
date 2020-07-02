@@ -1,0 +1,40 @@
+name: Myplugin
+main: com.organicsalt.minecraft.main
+version: 1.0.0
+author: one-for-four
+commands:
+  sign_in:
+    description: "这个命令进行签到操作"
+    usage: "使用方法:/sign_in"
+    permission: "MyPlugin.sign_in"
+    permission-message: "你没权限"
+  complement_sign:
+    description: "这个命令进行补签操作"
+    usage: "使用方法:/complement_sign [date]"
+    permission: "MyPlugin.complement_sign"
+    permission-message: "你没权限"
+  query_sign:
+    description: "这个命令查询该月已签到日期"
+    usage: "使用方法:/query_sign"
+    permission: "MyPlugin.query_sign"
+    permission-message: "你没权限"
+  weapon_effects:
+    description: "这个命令进行当前武器特效打开/关闭/赋予操作"
+    usage: "使用方法:/weapon_effects [on/off/up]"
+    permission: "MyPlugin.weapon_effects"
+    permission-message: "你没权限"
+  invest:
+    description: "这个命令进行充值操作"
+    usage: "使用方法:/invest [count]"
+    permission: "MyPlugin.invest"
+    permission-message: "你没权限"
+  buy:
+    description: "这个命令进行购买操作"
+    usage: "使用方法:/buy [sign|upgrade|effects] [count]"
+    permission: "MyPlugin.buy"
+    permission-message: "你没权限"
+  vip:
+    description: "这个命令进行VIP操作"
+    usage: "使用方法:/vip [bonus [count]|grade|level]"
+    permission: "MyPlugin.vip"
+    permission-message: "你没权限"
