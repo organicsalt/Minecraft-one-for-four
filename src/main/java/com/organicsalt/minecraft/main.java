@@ -16,13 +16,15 @@ public class main extends JavaPlugin{
         this.getCommand("invest").setExecutor(new invest());
         this.getCommand("buy").setExecutor(new buy());
         this.getCommand("vip").setExecutor(new vip());
-        getLogger().info("测试插件启动成功！");
+        this.getCommand("weapon_upgrade").setExecutor(new weapon_upgrade());
+        this.getCommand("union").setExecutor(new union());
+        getLogger().info("插件启动成功！");
         super.onEnable();
     }
 
     @Override
     public void onDisable() {
-        System.out.println("测试插件结束！");
+        System.out.println("插件结束！");
         super.onDisable();
     }
 }

@@ -8,7 +8,6 @@ import org.bukkit.entity.Player;
 public class invest implements CommandExecutor {
     @Override
     public boolean onCommand(CommandSender commandSender, Command command, String s, String[] strings) {
-        commandSender.sendMessage("你好"+commandSender.getName());
         if(commandSender instanceof Player){
             if (s.equalsIgnoreCase("invest")){
                 if(strings.length==1){
@@ -33,6 +32,7 @@ public class invest implements CommandExecutor {
                 }
                 else{
                     commandSender.sendMessage("参数过多或不足");
+                    return false;
                 }
             }
         }

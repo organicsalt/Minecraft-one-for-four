@@ -9,7 +9,6 @@ public class vip implements CommandExecutor {
 
     @Override
     public boolean onCommand(CommandSender commandSender, Command command, String s, String[] strings) {
-        commandSender.sendMessage("你好"+commandSender.getName());
         if(commandSender instanceof Player){
             if (s.equalsIgnoreCase("vip")){
                 if(strings.length==2){
@@ -48,6 +47,7 @@ public class vip implements CommandExecutor {
                 }
                 else{
                     commandSender.sendMessage("参数过多或不足");
+                    return false;
                 }
             }
         }

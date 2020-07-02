@@ -9,7 +9,6 @@ public class sign_in implements CommandExecutor{
 
     @Override
     public boolean onCommand(CommandSender commandSender, Command command, String s, String[] strings) {
-        commandSender.sendMessage("你好"+commandSender.getName());
         if(commandSender instanceof Player){
             if (s.equalsIgnoreCase("sign_in")){
                 //连接数据库查询已经签到的日子

@@ -9,7 +9,6 @@ public class complement_sign implements CommandExecutor {
 
     @Override
     public boolean onCommand(CommandSender commandSender, Command command, String s, String[] strings) {
-        commandSender.sendMessage("你好"+commandSender.getName());
         if(commandSender instanceof Player){
             if (s.equalsIgnoreCase("complement_sign")){
                 if(strings.length==1){
@@ -32,6 +31,7 @@ public class complement_sign implements CommandExecutor {
                 }
                 else{
                     commandSender.sendMessage("参数过多或不足");
+                    return false;
                 }
             }
         }

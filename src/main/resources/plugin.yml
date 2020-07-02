@@ -19,8 +19,8 @@ commands:
     permission: "MyPlugin.query_sign"
     permission-message: "你没权限"
   weapon_effects:
-    description: "这个命令进行当前武器特效打开/关闭/赋予操作"
-    usage: "使用方法:/weapon_effects [on/off/up]"
+    description: "这个命令进行指定武器特效打开/关闭/赋予操作"
+    usage: "使用方法:/weapon_effects [on/off/up [weapon]]"
     permission: "MyPlugin.weapon_effects"
     permission-message: "你没权限"
   invest:
@@ -37,4 +37,14 @@ commands:
     description: "这个命令进行VIP操作"
     usage: "使用方法:/vip [bonus [count]|grade|level]"
     permission: "MyPlugin.vip"
+    permission-message: "你没权限"
+  weapon_upgrade:
+    description: "这个命令进行指定武器强化操作"
+    usage: "使用方法:/weapon_upgrade [weapon]"
+    permission: "MyPlugin.weapon_upgrade"
+    permission-message: "你没权限"
+  union:
+    description: "这个命令进行工会相关操作"
+    usage: "使用方法:/union [create|leave|join|dismiss|info] [union]|[upgrade|demote|kick|accept|deny|trans] [player]|[announce] [words]|[sign] "
+    permission: "MyPlugin.union"
     permission-message: "你没权限"

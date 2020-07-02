@@ -8,7 +8,6 @@ import org.bukkit.entity.Player;
 public class buy implements CommandExecutor {
     @Override
     public boolean onCommand(CommandSender commandSender, Command command, String s, String[] strings) {
-        commandSender.sendMessage("你好"+commandSender.getName());
         if(commandSender instanceof Player){
             if (s.equalsIgnoreCase("buy")){
                 if(strings.length==2){
@@ -16,7 +15,6 @@ public class buy implements CommandExecutor {
                     int amount = Integer.parseInt(strings[1]);
                     if(amount>0){
                         if(strings[0].equalsIgnoreCase("sign")){
-
                             if(true){//如果sign_money*amount<=gold
                                 //gold=gold-sign_money*amount;
                                 //将gold和amount数量的sign写入数据库
@@ -56,6 +54,7 @@ public class buy implements CommandExecutor {
                 }
                 else{
                     commandSender.sendMessage("参数过多或不足");
+                    return false;
                 }
             }
         }
