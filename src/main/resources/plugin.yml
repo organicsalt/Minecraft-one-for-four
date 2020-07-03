@@ -20,7 +20,7 @@ commands:
     permission-message: "你没权限"
   weapon_effects:
     description: "这个命令进行指定武器特效打开/关闭/赋予操作"
-    usage: "使用方法:/weapon_effects [on/off/up [weapon]]"
+    usage: "使用方法:/weapon_effects [on/off/up] [weapon]"
     permission: "MyPlugin.weapon_effects"
     permission-message: "你没权限"
   invest:

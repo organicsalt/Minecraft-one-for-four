@@ -72,7 +72,7 @@
       <recent name="C:\Users\1\Desktop\MinecraftPlugin\one-for-four\libs" />
     </key>
   </component>
-  <component name="RunManager" selected="Gradle.one-for-four [build]">
+  <component name="RunManager" selected="Gradle.one-for-four [clean]">
     <configuration name="one-for-four [build]" type="GradleRunConfiguration" factoryName="Gradle" temporary="true">
       <ExternalSystemSettings>
         <option name="executionName" />
@@ -128,7 +128,10 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1593659685361</updated>
-      <workItem from="1593659688244" duration="19317000" />
+      <workItem from="1593659688244" duration="19687000" />
+      <workItem from="1593736312059" duration="32000" />
+      <workItem from="1593760026929" duration="1991000" />
+      <workItem from="1593766400861" duration="3972000" />
     </task>
     <servers />
   </component>
@@ -144,26 +147,30 @@
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
     <state x="1302" y="395" key="#com.intellij.ide.util.MemberChooser/0.0.1920.1040@0.0.1920.1040" timestamp="1593682687308" />
-    <state x="1036" y="408" key="FileChooserDialogImpl" timestamp="1593687560296">
+    <state x="1036" y="408" key="FileChooserDialogImpl" timestamp="1593736338351">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
-    <state x="1036" y="408" key="FileChooserDialogImpl/0.0.1920.1040@0.0.1920.1040" timestamp="1593687560296" />
-    <state width="1877" height="251" key="GridCell.Tab.0.bottom" timestamp="1593689645058">
+    <state x="1036" y="408" key="FileChooserDialogImpl/0.0.1920.1040@0.0.1920.1040" timestamp="1593736338351" />
+    <state width="1877" height="251" key="GridCell.Tab.0.bottom" timestamp="1593774896064">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
-    <state width="1877" height="251" key="GridCell.Tab.0.bottom/0.0.1920.1040@0.0.1920.1040" timestamp="1593689645058" />
-    <state width="1877" height="251" key="GridCell.Tab.0.center" timestamp="1593689645058">
+    <state width="1877" height="251" key="GridCell.Tab.0.bottom/0.0.1920.1040@0.0.1920.1040" timestamp="1593774896064" />
+    <state width="1877" height="251" key="GridCell.Tab.0.center" timestamp="1593774896064">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
-    <state width="1877" height="251" key="GridCell.Tab.0.center/0.0.1920.1040@0.0.1920.1040" timestamp="1593689645058" />
-    <state width="1877" height="251" key="GridCell.Tab.0.left" timestamp="1593689645058">
+    <state width="1877" height="251" key="GridCell.Tab.0.center/0.0.1920.1040@0.0.1920.1040" timestamp="1593774896064" />
+    <state width="1877" height="251" key="GridCell.Tab.0.left" timestamp="1593774896064">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
-    <state width="1877" height="251" key="GridCell.Tab.0.left/0.0.1920.1040@0.0.1920.1040" timestamp="1593689645058" />
-    <state width="1877" height="251" key="GridCell.Tab.0.right" timestamp="1593689645058">
+    <state width="1877" height="251" key="GridCell.Tab.0.left/0.0.1920.1040@0.0.1920.1040" timestamp="1593774896064" />
+    <state width="1877" height="251" key="GridCell.Tab.0.right" timestamp="1593774896064">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
-    <state width="1877" height="251" key="GridCell.Tab.0.right/0.0.1920.1040@0.0.1920.1040" timestamp="1593689645058" />
+    <state width="1877" height="251" key="GridCell.Tab.0.right/0.0.1920.1040@0.0.1920.1040" timestamp="1593774896064" />
+    <state x="640" y="344" key="com.intellij.ide.util.TipDialog" timestamp="1593736311817">
+      <screen x="0" y="0" width="1920" height="1040" />
+    </state>
+    <state x="640" y="344" key="com.intellij.ide.util.TipDialog/0.0.1920.1040@0.0.1920.1040" timestamp="1593736311817" />
     <state x="990" y="361" width="672" height="678" key="search.everywhere.popup" timestamp="1593688388172">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
