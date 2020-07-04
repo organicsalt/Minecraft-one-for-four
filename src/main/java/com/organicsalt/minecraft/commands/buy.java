@@ -6,6 +6,7 @@ import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.PlayerInventory;
 import org.bukkit.inventory.meta.ItemMeta;
 
 import java.util.Arrays;
@@ -21,9 +22,9 @@ public class buy implements CommandExecutor {
                     int amount = Integer.parseInt(strings[1]);
                     if(amount>0){
                         if(strings[0].equalsIgnoreCase("sign")){
-                            if(true){//如果sign_money*amount<=gold
-                                //gold=gold-sign_money*amount;
-                                //将gold和amount数量的sign写入数据库
+                            //sql="select amount from itemInBag where UUID='" + id + "' and item='stamps'"; //获取现有点券money
+                            if(true){//如果1*amount<=money
+                                //sql="select amount from itemInBag where UUID='" + id + "' and item='complement_card'";  //查询玩家现有补签卡张数complement_card
                                 ItemStack itemStack = new ItemStack(Material.GOLD_INGOT);
                                 ItemMeta itemMeta = itemStack.getItemMeta();
                                 itemMeta.setDisplayName("§e这是一个补签卡");
@@ -32,13 +33,18 @@ public class buy implements CommandExecutor {
                                 itemStack.setAmount(amount);
                                 player.getInventory().addItem(itemStack);
                                 commandSender.sendMessage("购买"+amount+"件补签卡成功！");
+                                //将money和amount数量的sign写入数据库
+                                //complement_card=complement_card+amount;
+                                //money=money-1*amount;
+                                //sql="update itemInBag set amount = "+money+" where UUID='" + id + " and item='stamps'";
+                                //sql="update itemInBag set amount = "+money+" where UUID='" + id + " and item='stamps'";
                             }
                             else if(false){
                                 commandSender.sendMessage("余额不足，购买补签卡失败，请充值！");
                             }
                         }
                         else if(strings[0].equalsIgnoreCase("upgrade")){
-                            if(true){//如果upgrade_money*amount<=gold
+                            if(true){//如果upgrade_money*amount<=gmoney
                                 //gold=gold-upgrade_money*amount;
                                 //将gold和amount数量的upgrade写入数据库
                                 ItemStack itemStack = new ItemStack(Material.DIAMOND);
@@ -56,7 +62,7 @@ public class buy implements CommandExecutor {
                             }
                         }
                         else if(strings[0].equalsIgnoreCase("effects")){
-                            if(true){//如果effects_money*amount<=gold
+                            if(true){//如果effects_money*amount<=money
                                 //gold=gold-effects_money*amount;
                                 //将gold和amount数量的effects写入数据库
                                 ItemStack itemStack=new ItemStack(Material.FLINT);
