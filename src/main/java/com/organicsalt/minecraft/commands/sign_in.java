@@ -12,9 +12,11 @@ public class sign_in implements CommandExecutor{
         if(commandSender instanceof Player){
             if (s.equalsIgnoreCase("sign_in")){
                 //连接数据库查询已经签到的日子
+                //sql="select "+strings[0]+" from role_sign where UUID = '" + id + "'"; 查询签到的日子date
                 if(true){//如果能够签到
                     commandSender.sendMessage("签到成功!");
                     //向玩家背包发送当日签到奖励
+                    //sql="insert into role_sign values('"+UUID+"', "+strings[0]+")";
                 }
                 else{//如果不能签到
                     commandSender.sendMessage("今天你已经签过到了!");

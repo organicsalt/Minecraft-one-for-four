@@ -4,6 +4,7 @@ import org.bukkit.Material;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
+import org.bukkit.entity.Item;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.PlayerInventory;
@@ -36,7 +37,7 @@ public class buy implements CommandExecutor {
                                 //将money和amount数量的sign写入数据库
                                 //complement_card=complement_card+amount;
                                 //money=money-1*amount;
-                                //sql="update itemInBag set amount = "+money+" where UUID='" + id + " and item='stamps'";
+                                //sql="update itemInBag set amount = "+complement_card+" where UUID='" + id + " and item='complement_card'";
                                 //sql="update itemInBag set amount = "+money+" where UUID='" + id + " and item='stamps'";
                             }
                             else if(false){
@@ -44,9 +45,9 @@ public class buy implements CommandExecutor {
                             }
                         }
                         else if(strings[0].equalsIgnoreCase("upgrade")){
-                            if(true){//如果upgrade_money*amount<=gmoney
-                                //gold=gold-upgrade_money*amount;
-                                //将gold和amount数量的upgrade写入数据库
+                            //sql="select amount from itemInBag where UUID='" + id + "' and item='stamps'"; //获取现有点券money
+                            if(true){//如果5*amount<=money
+                                //sql="select amount from itemInBag where UUID='" + id + "' and item='upgrade_stone'";  //查询玩家现有强化石个数upgrade_stone
                                 ItemStack itemStack = new ItemStack(Material.DIAMOND);
                                 ItemMeta itemMeta = itemStack.getItemMeta();
                                 itemMeta.setDisplayName("§e这是一个强化石");
@@ -55,16 +56,20 @@ public class buy implements CommandExecutor {
                                 itemStack.setAmount(amount);
                                 player.getInventory().addItem(itemStack);
                                 commandSender.sendMessage("购买"+amount+"件强化石成功！");
-
+                                //将money和amount数量的upgrade_stone写入数据库
+                                //upgrade_stone=upgrade_stone+amount;
+                                //money=money-5*amount;
+                                //sql="update itemInBag set amount = "+upgrade_stone+" where UUID='" + id + " and item='upgrade_stone'";
+                                //sql="update itemInBag set amount = "+money+" where UUID='" + id + " and item='stamps'";
                             }
                             else if(false){
                                 commandSender.sendMessage("余额不足，购买强化石失败，请充值！");
                             }
                         }
                         else if(strings[0].equalsIgnoreCase("effects")){
-                            if(true){//如果effects_money*amount<=money
-                                //gold=gold-effects_money*amount;
-                                //将gold和amount数量的effects写入数据库
+                            //sql="select amount from itemInBag where UUID='" + id + "' and item='stamps'"; //获取现有点券money
+                            if(true){//如果20*amount<=money
+                                //sql="select amount from itemInBag where UUID='" + id + "' and item='effects_stone'";  //查询玩家现有强化石个数effects_stone
                                 ItemStack itemStack=new ItemStack(Material.FLINT);
                                 ItemMeta itemMeta = itemStack.getItemMeta();
                                 itemMeta.setDisplayName("§e这是一个装扮石");
@@ -73,6 +78,11 @@ public class buy implements CommandExecutor {
                                 itemStack.setAmount(amount);
                                 player.getInventory().addItem(itemStack);
                                 commandSender.sendMessage("购买"+amount+"件装扮石成功！");
+                                //将money和amount数量的effects_stone写入数据库
+                                //effects_stone=effects_stone+amount;
+                                //money=money-20*amount;
+                                //sql="update itemInBag set amount = "+money+" where UUID='" + id + " and item='effects_stone'";
+                                //sql="update itemInBag set amount = "+money+" where UUID='" + id + " and item='stamps'";
                             }
                             else if(false){
                                 commandSender.sendMessage("余额不足，购买装扮石失败，请充值！");

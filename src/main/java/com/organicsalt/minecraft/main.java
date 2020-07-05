@@ -1,6 +1,8 @@
 package com.organicsalt.minecraft;
 
 import com.organicsalt.minecraft.commands.*;
+import com.organicsalt.minecraft.event.EntityEvent;
+import org.bukkit.Bukkit;
 import org.bukkit.plugin.java.JavaPlugin;
 
 public class main extends JavaPlugin{
@@ -9,6 +11,7 @@ public class main extends JavaPlugin{
     @Override
     public void onEnable() {
         plugin=this;
+        Bukkit.getPluginManager().registerEvents(new EntityEvent(),this);
         this.getCommand("sign_in").setExecutor(new sign_in());
         this.getCommand("complement_sign").setExecutor(new complement_sign());
         this.getCommand("query_sign").setExecutor(new query_sign());

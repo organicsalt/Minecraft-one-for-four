@@ -45,6 +45,6 @@ commands:
     permission-message: "你没权限"
   union:
     description: "这个命令进行工会相关操作"
-    usage: "使用方法:/union [create|leave|join|dismiss|info] [union]|[upgrade|demote|kick|accept|deny|trans] [player]|[announce] [words]|[sign] "
+    usage: "使用方法:/union [create|leave|join|dismiss|info] [union]|[upgrade|demote|kick|accept|deny|trans] [player]|[announce] [words] "
     permission: "MyPlugin.union"
     permission-message: "你没权限"

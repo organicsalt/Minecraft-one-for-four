@@ -12,6 +12,7 @@ public class query_sign implements CommandExecutor {
         if(commandSender instanceof Player){
             if (s.equalsIgnoreCase("query_sign")){
                 //连接数据库查询已经签到的日子
+                //sql="select * from role_sign where UUID = '" + id + "'"; 查询当月签到的日子
                 if(true){//如果查询有返回结果
                     commandSender.sendMessage("你的签到记录如下：");
                     //向玩家发送当月签到结果
