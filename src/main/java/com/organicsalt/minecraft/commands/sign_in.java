@@ -1,5 +1,6 @@
 package com.organicsalt.minecraft.commands;
 
+import com.organicsalt.minecraft.GUI.storeInventory;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -14,6 +15,8 @@ public class sign_in implements CommandExecutor{
                 //连接数据库查询已经签到的日子
                 //sql="select "+strings[0]+" from role_sign where UUID = '" + id + "'"; 查询签到的日子date
                 if(true){//如果能够签到
+                    Player player=(Player)commandSender;
+                    storeInventory.storeGUI(player);
                     commandSender.sendMessage("签到成功!");
                     //向玩家背包发送当日签到奖励
                     //sql="insert into role_sign values('"+UUID+"', "+strings[0]+")";

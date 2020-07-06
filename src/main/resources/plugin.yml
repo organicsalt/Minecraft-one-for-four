@@ -2,6 +2,7 @@ name: Myplugin
 main: com.organicsalt.minecraft.main
 version: 1.0.0
 author: one-for-four
+depend: [Vault]
 commands:
   sign_in:
     description: "这个命令进行签到操作"
