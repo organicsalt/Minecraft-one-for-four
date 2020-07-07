@@ -27,13 +27,6 @@ public class invest implements CommandExecutor {
                             //在数据库中查询对应的玩家现有金钱money
                             //sql="select amount from itemInBag where UUID='" + id + "' and item='stamps'"; //获取现有点券money
                             //sql="select vip_point from vip where UUID='" + id + "'";  //查询vip点数vip_point
-                            ItemStack itemStack = new ItemStack(Material.GOLD_BLOCK);
-                            ItemMeta itemMeta = itemStack.getItemMeta();
-                            itemMeta.setDisplayName("§e这是点券");
-                            itemMeta.setLore(Arrays.asList("§b该物品可以用来购买付费道具"));
-                            itemStack.setItemMeta(itemMeta);
-                            itemStack.setAmount(amount);
-                            player.getInventory().addItem(itemStack);
                             commandSender.sendMessage("充值" + amount + "点卡成功！");
                             //money=money+amount;
                             //vip_point=vip_point+amount;

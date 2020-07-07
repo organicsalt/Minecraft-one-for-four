@@ -12,6 +12,7 @@ import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import java.util.UUID;
 
 public class EntityEvent implements Listener {
+    /*
     @EventHandler(priority = EventPriority.HIGH)
     public void PlayerDamage(EntityDamageByEntityEvent event){
         Entity damager=event.getDamager();
@@ -28,4 +29,5 @@ public class EntityEvent implements Listener {
             }
         }
     }
+    */
 }

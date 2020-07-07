@@ -1,12 +1,18 @@
 package com.organicsalt.minecraft.event;
 
+import com.organicsalt.minecraft.effects.AroundEffect;
 import com.organicsalt.minecraft.main;
 import com.organicsalt.minecraft.util.PlayerPointsUtil;
+import org.bukkit.Effect;
+import org.bukkit.Location;
+import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerCommandPreprocessEvent;
+import org.bukkit.event.player.PlayerInteractEvent;
+import org.bukkit.event.player.PlayerItemHeldEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
 
 import java.util.UUID;
@@ -94,4 +100,44 @@ public class PlayerEvent implements Listener {
             points=points2;
         }
     }
+
+    @EventHandler
+    public void onPlayerInteractBlock(PlayerInteractEvent event) {
+        if(AroundEffect.status==true){ //当前特效已开启
+            Player player = event.getPlayer();
+            if (player.getItemInHand().getType() == Material.IRON_SWORD) {  //IRON_SWORD
+                // 在给定坐标中生成一道闪电. 在本例中, 这个坐标是玩家准星瞄准的地方.
+                // 只能指向1格以内的坐标.
+                player.getWorld().strikeLightningEffect(player.getTargetBlock(null,1).getLocation());
+            }
+            else if(player.getItemInHand().getType()==Material.WOOD_SWORD){
+                Location location=player.getTargetBlock(null,1).getLocation();
+                player.getWorld().createExplosion(location.getX(),location.getY(),location.getZ(),1.0f,true,false);
+            }
+            else if(player.getItemInHand().getType()==Material.DIAMOND_SWORD){
+                Location location=player.getTargetBlock(null,1).getLocation();
+                location.getWorld().playEffect(location, Effect.MOBSPAWNER_FLAMES, 1);
+            }
+        }
+    }
+
+    /*没作用
+    @EventHandler
+    public void PlayerItemHeld(PlayerItemHeldEvent event){
+        Player player=event.getPlayer();
+        player.sendMessage("物品已更换:"+event.getPlayer().getItemInHand().getItemMeta().getDisplayName());
+        if(player.getItemInHand().getType()==Material.IRON_SWORD){
+            AroundEffect aroundEffect = new AroundEffect(player, Effect.ENDER_SIGNAL);
+            aroundEffect.startEffect();
+        }
+        else if(player.getItemInHand().getType() == Material.DIAMOND_SWORD) {
+            AroundEffect aroundEffect = new AroundEffect(player, Effect.SMOKE);
+            aroundEffect.startEffect();
+        }
+        else if (player.getItemInHand().getType() == Material.WOOD_SWORD) {
+            AroundEffect aroundEffect = new AroundEffect(player, Effect.MOBSPAWNER_FLAMES);
+            aroundEffect.startEffect();
+        }
+    }
+    */
 }
