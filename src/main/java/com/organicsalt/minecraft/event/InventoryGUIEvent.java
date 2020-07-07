@@ -2,6 +2,7 @@ package com.organicsalt.minecraft.event;
 
 import com.organicsalt.minecraft.GUI.effectInventory;
 import com.organicsalt.minecraft.GUI.storeInventory;
+import com.organicsalt.minecraft.GUI.upgradeInventory;
 import com.organicsalt.minecraft.main;
 import org.bukkit.entity.HumanEntity;
 import org.bukkit.entity.Player;
@@ -21,7 +22,7 @@ public class InventoryGUIEvent implements Listener {
             Player player=(Player)whoClicked;
             int rawslot=event.getRawSlot();
             //main.plugin.getLogger().info((String.valueOf(rawslot)));
-            if(rawslot==1||rawslot==4||rawslot==7||rawslot==49){
+            if((rawslot>=0&&rawslot<=8)||rawslot==49){
                 event.setCancelled(true);
                 /*
                 //连接数据库查询物品价格sign_money|upgrade_money|effects_money,和玩家现有金钱money
@@ -83,7 +84,7 @@ public class InventoryGUIEvent implements Listener {
             HumanEntity whoClicked=event.getWhoClicked();
             Player player=(Player)whoClicked;
             int rawslot=event.getRawSlot();
-            main.plugin.getLogger().info((String.valueOf(rawslot)));
+            //main.plugin.getLogger().info((String.valueOf(rawslot)));
             if(rawslot>=0&&rawslot<=53&&rawslot!=22) {
                 event.setCancelled(true);
                 if(rawslot==47){
@@ -113,6 +114,53 @@ public class InventoryGUIEvent implements Listener {
                 else{
                     player.sendMessage("这个不能点击");
                 }
+            }
+        }
+        else if(title.equalsIgnoreCase(upgradeInventory.upgradeGui)){
+            HumanEntity whoClicked=event.getWhoClicked();
+            Player player=(Player)whoClicked;
+            int rawslot=event.getRawSlot();
+            //main.plugin.getLogger().info((String.valueOf(rawslot)));
+            if(rawslot>=0&&rawslot<=53&&rawslot!=22) {
+                event.setCancelled(true);
+                if(rawslot==47) {
+                    //链接数据库查询背包中强化石的数量
+                    //sql="select amount from itemInBag where UUID='" + id + "' and item='upgrade_stone'";  //查询玩家现有强化石个数upgrade_stone
+                    //sql="select level from weapon_upgrade where UUID='" + id + "' and weapon='" + strings[1] + "'"; //查询需要强化的武器等级level 记得要设置displayname
+                    if(true) {//22格里面有武器
+                        if (true) {//如果强化石的数量足够
+                            //如果武器没有强化等级
+                            //sql="insert into weapon_upgrade values('" + strings[1] + "', 0, '"+ id + "')";
+                            //随机函数判断是否强化成功
+                            //对应数量的强化石销毁
+                            //upgrade_stone=upgrade_stone-level*2;
+                            //sql="update itemInBag set amount = "+upgrade_stone+" where UUID='" + id + " and item='upgrade_stone'";
+                            if (true) {//如果强化成功
+                                //强化成功武器等级+1
+                                //level=level+1;
+                                //sql="update weapon_upgrade set level = "+ level +" where UUID='" + id + " and weapon='" + strings[1] + "'";
+                                player.sendMessage("强化成功！");
+                                //如果是+7以上强化成功将在工会内部广播
+                            } else {
+                                player.sendMessage("强化失败！");
+                                //强化失败武器等级不变
+                            }
+                        } else {
+                            player.sendMessage("强化石数量不足！");
+                        }
+                    }
+                    else{
+                        player.sendMessage("武器不存在！");
+                    }
+                }
+                else if(rawslot==51){
+                    player.sendMessage("退出强化");
+                    player.closeInventory();
+                }
+                else{
+                    player.sendMessage("这个不能点击");
+                }
+
             }
         }
     }
