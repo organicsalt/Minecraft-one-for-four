@@ -1,0 +1,9 @@
+name: 这是测试插件
+age: 666
+health: 20.0
+dbname: "myplugin"
+PlayerNames:
+  - "asd"
+  - "asd1"
+  - "asd2"
+  - "asd3"

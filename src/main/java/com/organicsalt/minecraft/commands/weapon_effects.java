@@ -35,6 +35,7 @@ public class weapon_effects implements CommandExecutor {
                         else{
                             commandSender.sendMessage("当前特效已开启，请先关闭特效!");
                         }
+                        return true;
                     } else if (strings[0].equalsIgnoreCase("off")) {//如果是关闭武器特效指令
                         if(AroundEffect.status==true) {
                             AroundEffect aroundEffect = new AroundEffect(player, null);
@@ -44,19 +45,20 @@ public class weapon_effects implements CommandExecutor {
                         else{
                             commandSender.sendMessage("当前特效已关闭，请勿重复关闭!");
                         }
+                        return true;
                     }
                     else if (strings[0].equalsIgnoreCase("up")) {//如果是赋予武器特效指令
                         effectInventory.effectGUI(player);
+                        return true;
                     }
                 }
             } else {
                 commandSender.sendMessage("参数过多或不足");
-                return false;
             }
         }
         else{
             commandSender.sendMessage("你没有这个功能！");
         }
-        return true;
+        return false;
     }
 }

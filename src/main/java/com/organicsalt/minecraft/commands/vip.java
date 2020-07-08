@@ -36,6 +36,7 @@ public class vip implements CommandExecutor {
                         commandSender.sendMessage("请正确输入指令！");
                         return false;
                     }
+                    return true;
                 }
                 else if(strings.length==1){
                     if(strings[0].equalsIgnoreCase("grade")){
@@ -50,16 +51,16 @@ public class vip implements CommandExecutor {
                         int vip_level=2;
                         commandSender.sendMessage("你当前为VIP"+vip_level+"！");
                     }
+                    return true;
                 }
                 else{
                     commandSender.sendMessage("参数过多或不足");
-                    return false;
                 }
             }
         }
         else{
             commandSender.sendMessage("你没有这个功能！");
         }
-        return true;
+        return false;
     }
 }

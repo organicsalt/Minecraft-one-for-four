@@ -22,12 +22,13 @@ public class sign_in implements CommandExecutor{
                 else{//如果不能签到
                     commandSender.sendMessage("今天你已经签过到了!");
                 }
+                return true;
             }
 
         }
         else{
             commandSender.sendMessage("你没有这个功能！");
         }
-        return true;
+        return false;
     }
 }

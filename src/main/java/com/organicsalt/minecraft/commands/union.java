@@ -1,10 +1,17 @@
 package com.organicsalt.minecraft.commands;
 
+import com.organicsalt.minecraft.dao.SQLiteManager;
+import com.organicsalt.minecraft.main;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
+import org.bukkit.scheduler.BukkitRunnable;
 
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.UUID;
 
 public class union implements CommandExecutor {
@@ -17,238 +24,527 @@ public class union implements CommandExecutor {
                 UUID id = player.getUniqueId();
                 if(strings.length==2){
                     if(strings[0].equalsIgnoreCase("create")){
-                        //连接数据库检查strings[1]工会名是否有重复的
-                        //sql="select * from union_info where union = '" + strings[1] + "'"; //获取工会名称信息
-                        if(true){//工会名无重复
-                            //检查当前玩家是否属于任何工会
-                            //sql="select union from union_duty where UUID = '" + id  + "'";
-                            if(true){//当前玩家不属于任何工会
-                                //输入工会领地坐标x,y,z,工会半径为10
-                                if(true){//工会领地与其他工会没有冲突
-                                    //以strings[1]作为工会名创建一个新的工会，当前玩家作为会长
-                                    //sql="insert into union_info values('"+strings[1]+"', '','"+id+"',"+x+","+y+","+z+")";
-                                    //sql="insert into union_duty values('"+id+"','"+strings[1]+"',4)"
-                                    commandSender.sendMessage("创建"+strings[1]+"工会成功！");
-                                }
-                                else{
-                                    commandSender.sendMessage("工会领地冲突！");
+                        new BukkitRunnable(){
+                            @Override
+                            public void run() {
+                                ResultSet rs = SQLiteManager.get().findUnionData(strings[1], commandSender);
+                                try {
+                                    if(rs.next()){
+                                        player.sendMessage("该公会名重复！");
+                                    }
+                                    else{
+                                        rs = SQLiteManager.get().findUnionDutyData(player.getName(), commandSender);
+                                        if(rs.next()){
+                                            player.sendMessage("该玩家已有公会！");
+                                        }
+                                        else {
+                                            double x = player.getLocation().getX();
+                                            double y = player.getLocation().getY();
+                                            double z = player.getLocation().getZ();
+                                            SQLiteManager.get().insertData(strings[1], null, player.getName(), x, y, z, commandSender);
+                                            SQLiteManager.get().insertData(player.getName(),strings[1],4, commandSender);
+                                            player.sendMessage("创建公会成功!");
+                                        }
+                                    }
+                                } catch (SQLException e) {
+                                    e.printStackTrace();
                                 }
                             }
-                            else{//当前玩家已经有工会了
-                                commandSender.sendMessage("你已经有工会了！");
-                            }
-                        }
-                        else{
-                            commandSender.sendMessage("工会名重复，无法创建！");
-                        }
+                        }.runTaskAsynchronously(main.plugin);
+                        return true;
                     }
                     else if(strings[0].equalsIgnoreCase("leave")){
-                        //连接数据库检查玩家是否在strings[1]为名字的工会中
-                        //sql="select * from union_duty where UUID = '" + id  + "'";
-                        if(true){//strings[1]为名字的工会存在
-                            if(true){//玩家属于strings[1]为名字的工会
-                                if(true){ //玩家不是会长
-                                    //玩家退出strings[1]为名字的工会
-                                    //sql="delete from union_duty where UUID = '" + id  + "'";
-                                    commandSender.sendMessage(commandSender.getName()+"退出"+strings[1]+"工会成功！");
-                                }
-                                else{
-                                    commandSender.sendMessage("会长无法退出工会!");
+                        new BukkitRunnable(){
+                            @Override
+                            public void run() {
+                                ResultSet rs = SQLiteManager.get().findUnionDutyData(player.getName(), commandSender);
+                                try {
+                                    if(rs.next()){
+                                        String union = rs.getString("union");
+                                        int duty = rs.getInt("duty");
+                                        if(union.equals(strings[1])){
+                                            if(duty!=4){
+                                                SQLiteManager.get().deleteUnionData(player.getName(),1, commandSender);
+                                                player.sendMessage("§e"+player.getName()+"退出"+"§9"+strings[1]+"§f公会成功！");
+                                            }
+                                            else{
+                                                player.sendMessage("会长无法退出公会！");
+                                            }
+                                        }
+                                        else{
+                                            player.sendMessage("你不属于这个公会!");
+                                        }
+                                    }
+                                    else{
+                                        player.sendMessage("你没有公会!");
+                                    }
+                                } catch (SQLException e) {
+                                    e.printStackTrace();
                                 }
                             }
-                            else{//玩家不属于strings[1]为名字的工会
-                                commandSender.sendMessage("你不属于这个工会!");
-                            }
-                        }
-                        else{
-                            commandSender.sendMessage("该工会不存在！");
-                        }
+                        }.runTaskAsynchronously(main.plugin);
+                        return true;
                     }
                     else if(strings[0].equalsIgnoreCase("join")){
-                        //连接数据库检查玩家是否在strings[1]为名字的工会中
-                        //sql="select union from union_duty where UUID = '" + id  + "'";
-                        if(true){//strings[1]为名字的工会存在
-                            if(true){//玩家不属于strings[1]为名字的工会
-                                //玩家申请加入strings[1]为名字的工会
-                                //sql="insert into union_duty values('"+id+"','"+strings[1]+"',0)"
-                                commandSender.sendMessage(commandSender.getName()+"申请加入"+strings[1]+"工会成功！");
+                        new BukkitRunnable(){
+                            @Override
+                            public void run() {
+                                ResultSet rs = SQLiteManager.get().findUnionDutyData(player.getName(), commandSender);
+                                try {
+                                    if(rs.next()){
+                                        String union = rs.getString("union");
+                                        int duty = rs.getInt("duty");
+                                        if(union.equals(strings[1])&&duty>=1){
+                                            player.sendMessage("你已经属于这个公会!");
+                                        }
+                                        else if(union.equals(strings[1])&&duty==0){
+                                            player.sendMessage("你已经申请了该公会！");
+                                        }
+                                        else if(duty==0){
+                                            player.sendMessage("你已经申请了其他公会！");
+                                        }
+                                        else if(duty>=1){
+                                            player.sendMessage("你已经有了公会！");
+                                        }
+                                    }
+                                    else{
+                                        SQLiteManager.get().insertData(player.getName(), strings[1],0, commandSender);
+                                        player.sendMessage("申请加入"+"§e"+strings[1]+"§f公会成功!");
+                                    }
+                                } catch (SQLException e) {
+                                    e.printStackTrace();
+                                }
                             }
-                            else{//玩家属于strings[1]为名字的工会
-                                commandSender.sendMessage("你已经属于这个工会!");
-                            }
-                        }
-                        else{
-                            commandSender.sendMessage("该工会不存在！");
-                        }
+                        }.runTaskAsynchronously(main.plugin);
+                        return true;
                     }
                     else if(strings[0].equalsIgnoreCase("dismiss")){
-                        //连接数据库检查玩家是否在strings[1]为名字的工会中
-                        //sql="select * from union_duty where UUID = '" + id  + "'";
-                        if(true){//strings[1]为名字的工会存在
-                            if(true){//玩家属于strings[1]为名字的工会
-                                if(true){//玩家是该工会会长 level==4
-                                    //解散工会
-                                    //回收工会领地
-                                    //sql="delete from union_duty where union = '" + strings[1]  + "'";
-                                    //sql="delete from union_info where union = '" + strings[1]  + "'";
-                                    commandSender.sendMessage("解散"+strings[1]+"工会成功！");
-                                }
-                                else{//玩家不是该工会会长
-                                    commandSender.sendMessage("你没有足够的权限！");
+                        new BukkitRunnable(){
+                            @Override
+                            public void run() {
+                                ResultSet rs = SQLiteManager.get().findUnionDutyData(player.getName(), commandSender);
+                                try {
+                                    if(rs.next()){
+                                        String union = rs.getString("union");
+                                        int duty = rs.getInt("duty");
+                                        if(union.equals(strings[1])){
+                                            if(duty!=4){
+                                                player.sendMessage("你没有足够的权限！");
+                                            }
+                                            else{
+                                                ArrayList<String> members=new ArrayList<String>();
+                                                rs = SQLiteManager.get().findUnionMember(strings[1], commandSender);
+                                                while(rs.next()){
+                                                    members.add(rs.getString("name"));
+                                                }
+                                                for(String name:members){
+                                                    SQLiteManager.get().deleteUnionData(name,1, commandSender);
+                                                }
+                                                SQLiteManager.get().deleteUnionData(strings[1],0, commandSender);
+                                                player.sendMessage("公会已解散！");
+                                            }
+                                        }
+                                        else{
+                                            player.sendMessage("你不属于这个公会!");
+                                        }
+                                    }
+                                    else{
+                                        player.sendMessage("你没有公会!");
+                                    }
+                                } catch (SQLException e) {
+                                    e.printStackTrace();
                                 }
                             }
-                            else{//玩家属于strings[1]为名字的工会
-                                commandSender.sendMessage("你不属于这个工会!");
-                            }
-                        }
-                        else{
-                            commandSender.sendMessage("该工会不存在！");
-                        }
+                        }.runTaskAsynchronously(main.plugin);
+                        return true;
                     }
                     else if(strings[0].equalsIgnoreCase("info")){
-                        //连接数据库查询strings[1]为名字的工会信息
-                        //sql="select * from union_info where union = '" + strings[1] + "'"; //获取工会名称信息
-                        if(true){//strings[1]为名字的工会存在
-                            commandSender.sendMessage(strings[1]+"工会信息如下：");
-                            //打印工会会长和公告信息
-                        }
-                        else{
-                            commandSender.sendMessage("该工会不存在！");
-                        }
+                        new BukkitRunnable(){
+                            @Override
+                            public void run() {
+                                ResultSet rs = SQLiteManager.get().findUnionData(strings[1], commandSender);
+                                try {
+                                    if(rs.next()){
+                                        String announce = rs.getString("announcement");
+                                        String name = rs.getString("name");
+                                        double x = rs.getDouble("x");
+                                        double y = rs.getDouble("y");
+                                        double z = rs.getDouble("z");
+                                        player.sendMessage(strings[1]+"公会信息如下:");
+                                        player.sendMessage("会长-"+name);
+                                        player.sendMessage("公会公告-"+announce);
+                                        player.sendMessage("公会据点坐标-");
+                                        player.sendMessage("x-"+x);
+                                        player.sendMessage("y-"+y);
+                                        player.sendMessage("z-"+z);
+                                    }
+                                    else{
+                                        player.sendMessage("该名字的公会不存在!");
+                                    }
+                                } catch (SQLException e) {
+                                    e.printStackTrace();
+                                }
+                            }
+                        }.runTaskAsynchronously(main.plugin);
+                        return true;
                     }
                     else if(strings[0].equalsIgnoreCase("upgrade")){
-                        //连接数据库查询strings[1]为名字的成员信息
-                        //sql="select * from union_duty where UUID = '" + strings[1]  + "'";\
-                        //sql="select * from union_duty where UUID = '" + id  + "'";
-                        if(true){//strings[1]为名字的成员在当前角色所在的工会存在 level之差大于1或者level==0
-                            if(true){//strings[1]为名字的成员职务可以提升
-                                //提升该成员职务level=level+1
-                                //sql="update union_duty set duty = " + level + " where UUID = '" + strings[1]  + "'";
-                                commandSender.sendMessage(strings[1]+"的职务已提升");
+                        new BukkitRunnable(){
+                            @Override
+                            public void run() {
+                                ResultSet rs = SQLiteManager.get().findUnionDutyData(strings[1], commandSender);
+                                ResultSet rs2 = SQLiteManager.get().findUnionDutyData(player.getName(), commandSender);
+                                try {
+                                    if(rs.next()){
+                                        if(rs2.next()){
+                                            String union1 = rs.getString("union");
+                                            String union2 = rs2.getString("union");
+                                            int duty1 = rs.getInt("duty");
+                                            int duty2 = rs2.getInt("duty");
+                                            if(union1.equals(union2)){
+                                                if(duty2-duty1>1){
+                                                    duty1=duty1+1;
+                                                    SQLiteManager.get().updateUnionDuty(strings[1], duty1, commandSender);
+                                                    player.sendMessage("§e"+strings[1]+"§f已晋升");
+                                                }
+                                                else{
+                                                    player.sendMessage("你没有足够的权限！");
+                                                }
+                                            }
+                                            else{
+                                                player.sendMessage("§e"+strings[1]+"§f不是你公会的成员！");
+                                            }
+                                        }
+                                        else{
+                                            player.sendMessage("你没有公会！");
+                                        }
+                                    }
+                                    else{
+                                        player.sendMessage("§e"+strings[1]+"§f没有公会！");
+                                    }
+                                } catch (SQLException e) {
+                                    e.printStackTrace();
+                                }
                             }
-                            else{
-                                commandSender.sendMessage("权限不足！");
-                            }
-                        }
-                        else{
-                            commandSender.sendMessage("该角色不是工会成员！");
-                        }
+                        }.runTaskAsynchronously(main.plugin);
+                        return true;
                     }
                     else if(strings[0].equalsIgnoreCase("demote")){
-                        //连接数据库查询strings[1]为名字的成员信息
-                        //sql="select * from union_duty where UUID = '" + strings[1]  + "'";
-                        //sql="select * from union_duty where UUID = '" + id  + "'";
-                        if(true){//strings[1]为名字的成员在当前角色所在的工会存在
-                            if(true){//strings[1]为名字的成员职务可以降级 level之差大于等于1或者level==0
-                                //降级该成员职务 level=level-1
-                                //sql="update union_duty set duty = " + level + " where UUID = '" + strings[1]  + "'";
-                                commandSender.sendMessage(strings[1]+"的职务已降级");
+                        new BukkitRunnable(){
+                            @Override
+                            public void run() {
+                                ResultSet rs = SQLiteManager.get().findUnionDutyData(strings[1], commandSender);
+                                ResultSet rs2 = SQLiteManager.get().findUnionDutyData(player.getName(), commandSender);
+                                try {
+                                    if(rs.next()){
+                                        if(rs2.next()){
+                                            String union1 = rs.getString("union");
+                                            String union2 = rs2.getString("union");
+                                            int duty1 = rs.getInt("duty");
+                                            int duty2 = rs2.getInt("duty");
+                                            if(union1.equals(union2)){
+                                                if(duty2-duty1>=1&&duty1>1){
+                                                    duty1=duty1-1;
+                                                    SQLiteManager.get().updateUnionDuty(strings[1], duty1, commandSender);
+                                                    player.sendMessage("§e"+strings[1]+"§f已降职");
+                                                }
+                                                else if(duty2-duty1<=1){
+                                                    player.sendMessage("你没有足够的权限！");
+                                                }
+                                                else{
+                                                    player.sendMessage("§e"+strings[1]+"§f无法被降职！");
+                                                }
+                                            }
+                                            else{
+                                                player.sendMessage("§e"+strings[1]+"§f不是你公会的成员！");
+                                            }
+                                        }
+                                        else{
+                                            player.sendMessage("你没有公会！");
+                                        }
+                                    }
+                                    else{
+                                        player.sendMessage("§e"+strings[1]+"§f没有公会！");
+                                    }
+                                } catch (SQLException e) {
+                                    e.printStackTrace();
+                                }
                             }
-                            else{
-                                commandSender.sendMessage("权限不足或已经是最低等级！");
-                            }
-                        }
-                        else{
-                            commandSender.sendMessage("该角色不是工会成员！");
-                        }
+                        }.runTaskAsynchronously(main.plugin);
+                        return true;
                     }
                     else if(strings[0].equalsIgnoreCase("kick")){
-                        //连接数据库查询strings[1]为名字的成员信息
-                        //sql="select * from union_duty where UUID = '" + strings[1]  + "'";
-                        //sql="select * from union_duty where UUID = '" + id  + "'";
-                        if(true){//strings[1]为名字的成员在当前角色所在的工会存在
-                            if(true){//踢出strings[1]为名字的成员的权限足够 level之差大于1或者level==0
-                                //踢出该成员
-                                //sql="delete from union_duty where UUID = '" + strings[1]  + "'";
-                                commandSender.sendMessage(strings[1]+"的已踢出");
+                        new BukkitRunnable(){
+                            @Override
+                            public void run() {
+                                ResultSet rs = SQLiteManager.get().findUnionDutyData(strings[1], commandSender);
+                                ResultSet rs2 = SQLiteManager.get().findUnionDutyData(player.getName(), commandSender);
+                                try {
+                                    if(rs.next()){
+                                        if(rs2.next()){
+                                            String union1 = rs.getString("union");
+                                            String union2 = rs2.getString("union");
+                                            int duty1 = rs.getInt("duty");
+                                            int duty2 = rs2.getInt("duty");
+                                            if(union1.equals(union2)){
+                                                if(duty2-duty1>1&&duty1>=1){
+                                                    SQLiteManager.get().deleteUnionData(strings[1], 1, commandSender);
+                                                    player.sendMessage("§e"+strings[1]+"§f已踢出");
+                                                }
+                                                else if(duty2-duty1<=1){
+                                                    player.sendMessage("你没有足够的权限！");
+                                                }
+                                                else{
+                                                    player.sendMessage("§e"+strings[1]+"§f无法被踢出！");
+                                                }
+                                            }
+                                            else{
+                                                player.sendMessage("§e"+strings[1]+"§f不是你公会的成员！");
+                                            }
+                                        }
+                                        else{
+                                            player.sendMessage("你没有公会！");
+                                        }
+                                    }
+                                    else{
+                                        player.sendMessage("§e"+strings[1]+"§f没有公会！");
+                                    }
+                                } catch (SQLException e) {
+                                    e.printStackTrace();
+                                }
                             }
-                            else{
-                                commandSender.sendMessage("权限不足！");
-                            }
-                        }
-                        else{
-                            commandSender.sendMessage("该角色不是工会成员！");
-                        }
+                        }.runTaskAsynchronously(main.plugin);
+                        return true;
                     }
                     else if(strings[0].equalsIgnoreCase("accept")){
-                        //连接数据库查询strings[1]为名字的成员信息
-                        //sql="select * from union_duty where UUID = '" + strings[1]  + "'";
-                        //sql="select * from union_duty where UUID = '" + id  + "'";
-                        if(true){//strings[1]为名字的成员在当前角色所在工会的成员状态是申请 level==0
-                            if(true){//接受strings[1]为名字的成员的权限足够 level>1
-                                //接受该成员 level=1
-                                //sql="update union_duty set duty = " + level + " where UUID = '" + strings[1]  + "'";
-                                commandSender.sendMessage(strings[1]+"的已加入工会！");
+                        new BukkitRunnable(){
+                            @Override
+                            public void run() {
+                                ResultSet rs = SQLiteManager.get().findUnionDutyData(strings[1], commandSender);
+                                ResultSet rs2 = SQLiteManager.get().findUnionDutyData(player.getName(), commandSender);
+                                try {
+                                    if(rs.next()){
+                                        if(rs2.next()){
+                                            String union1 = rs.getString("union");
+                                            String union2 = rs2.getString("union");
+                                            int duty1 = rs.getInt("duty");
+                                            int duty2 = rs2.getInt("duty");
+                                            if(union1.equals(union2)){
+                                                if(duty2>1&&duty1==0){
+                                                    duty1=1;
+                                                    SQLiteManager.get().updateUnionDuty(strings[1], duty1, commandSender);
+                                                    player.sendMessage("§e"+strings[1]+"§f申请已通过！");
+                                                }
+                                                else if(duty2<=1){
+                                                    player.sendMessage("你没有足够的权限！");
+                                                }
+                                                else{
+                                                    player.sendMessage("§e"+strings[1]+"§f已经是公会成员！");
+                                                }
+                                            }
+                                            else{
+                                                player.sendMessage("§e"+strings[1]+"§f不是你公会的成员！");
+                                            }
+                                        }
+                                        else{
+                                            player.sendMessage("你没有公会！");
+                                        }
+                                    }
+                                    else{
+                                        player.sendMessage("§e"+strings[1]+"§f没有公会！");
+                                    }
+                                } catch (SQLException e) {
+                                    e.printStackTrace();
+                                }
                             }
-                            else{
-                                commandSender.sendMessage("权限不足！");
-                            }
-                        }
-                        else if(false){//strings[1]为名字的成员已经在当前角色所在工会
-                            commandSender.sendMessage(strings[1]+"已经是工会成员！");
-                        }
-                        else{
-                            commandSender.sendMessage("该角色没有申请工会！");
-                        }
+                        }.runTaskAsynchronously(main.plugin);
+                        return true;
                     }
                     else if(strings[0].equalsIgnoreCase("deny")){
-                        //连接数据库查询strings[1]为名字的成员信息
-                        //sql="select * from union_duty where UUID = '" + strings[1]  + "'";
-                        //sql="select * from union_duty where UUID = '" + id  + "'";
-                        if(true){//strings[1]为名字的成员在当前角色所在工会的成员状态是申请 level==0
-                            if(true){//接受strings[1]为名字的成员的权限足够 level>1
-                                //拒绝该成员
-                                //sql="delete from union_duty where UUID = '" + strings[1]  + "'";
-                                commandSender.sendMessage("已拒绝"+strings[1]+"加入工会！");
+                        new BukkitRunnable(){
+                            @Override
+                            public void run() {
+                                ResultSet rs = SQLiteManager.get().findUnionDutyData(strings[1], commandSender);
+                                ResultSet rs2 = SQLiteManager.get().findUnionDutyData(player.getName(), commandSender);
+                                try {
+                                    if(rs.next()){
+                                        if(rs2.next()){
+                                            String union1 = rs.getString("union");
+                                            String union2 = rs2.getString("union");
+                                            int duty1 = rs.getInt("duty");
+                                            int duty2 = rs2.getInt("duty");
+                                            if(union1.equals(union2)){
+                                                if(duty2>1&&duty1==0){
+                                                    SQLiteManager.get().deleteUnionData(strings[1], 1, commandSender);
+                                                    player.sendMessage("§e"+strings[1]+"§f申请已拒绝！");
+                                                }
+                                                else if(duty2<=1){
+                                                    player.sendMessage("你没有足够的权限！");
+                                                }
+                                                else{
+                                                    player.sendMessage("§e"+strings[1]+"§f已经是公会成员！");
+                                                }
+                                            }
+                                            else{
+                                                player.sendMessage("§e"+strings[1]+"§f不是你公会的成员！");
+                                            }
+                                        }
+                                        else{
+                                            player.sendMessage("你没有公会！");
+                                        }
+                                    }
+                                    else{
+                                        player.sendMessage("§e"+strings[1]+"§f没有公会！");
+                                    }
+                                } catch (SQLException e) {
+                                    e.printStackTrace();
+                                }
                             }
-                            else{
-                                commandSender.sendMessage("权限不足！");
-                            }
-                        }
-                        else if(false){//strings[1]为名字的成员已经在当前角色所在工会
-                            commandSender.sendMessage(strings[1]+"已经是工会成员！");
-                        }
-                        else{
-                            commandSender.sendMessage("该角色没有申请工会！");
-                        }
+                        }.runTaskAsynchronously(main.plugin);
+                        return true;
                     }
                     else if(strings[0].equalsIgnoreCase("trans")){
-                        //连接数据库查询strings[1]为名字的成员信息
-                        //sql="select * from union_duty where UUID = '" + strings[1]  + "'";
-                        //sql="select * from union_duty where UUID = '" + id  + "'"; //查得union
-                        if(true){//strings[1]为名字的成员在当前角色所在的工会存在
-                            //将工会转让给该成员 level=4
-                            //自己在工会的职务变成普通成员 level2=0
-                            //sql="update union_duty set duty = " + level2 + " where UUID = '" + id  + "'";
-                            //sql="update union_duty set duty = " + level + " where UUID = '" + strings[1]  + "'";
-                            //sql="update union_info set UUID = '" + strings[1] + "' where union = '" + union + "'";
-                            commandSender.sendMessage(strings[1]+"已成为会长！");
-                        }
-                        else{
-                            commandSender.sendMessage("该角色不是工会成员！");
-                        }
+                        new BukkitRunnable(){
+                            @Override
+                            public void run() {
+                                ResultSet rs = SQLiteManager.get().findUnionDutyData(strings[1], commandSender);
+                                ResultSet rs2 = SQLiteManager.get().findUnionDutyData(player.getName(), commandSender);
+                                try {
+                                    if(rs.next()){
+                                        if(rs2.next()){
+                                            String union1 = rs.getString("union");
+                                            String union2 = rs2.getString("union");
+                                            int duty1 = rs.getInt("duty");
+                                            int duty2 = rs2.getInt("duty");
+                                            if(union1.equals(union2)){
+                                                if(duty2==4&&duty1>=1){
+                                                    duty1=4;
+                                                    duty2=1;
+                                                    SQLiteManager.get().updateUnionDuty(strings[1], duty1, commandSender);
+                                                    SQLiteManager.get().updateUnionDuty(player.getName(), duty2, commandSender);
+                                                    SQLiteManager.get().updateUnionInfoMaster(strings[1], union1, commandSender);
+                                                    player.sendMessage("公会已转让给§e"+strings[1]);
+                                                }
+                                                else if(duty1==0){
+                                                    player.sendMessage("§e"+strings[1]+"§f不是你公会的成员！");
+                                                }
+                                                else{
+                                                    player.sendMessage("你没有足够的权限！");
+                                                }
+                                            }
+                                            else{
+                                                player.sendMessage("§e"+strings[1]+"§f不是你公会的成员！");
+                                            }
+                                        }
+                                        else{
+                                            player.sendMessage("§e"+strings[1]+"§f不是你公会的成员！");
+                                        }
+                                    }
+                                    else{
+                                        player.sendMessage("你没有公会！");
+                                    }
+                                } catch (SQLException e) {
+                                    e.printStackTrace();
+                                }
+                            }
+                        }.runTaskAsynchronously(main.plugin);
+                        return true;
                     }
                     else if(strings[0].equalsIgnoreCase("announce")){
-                        //连接数据库查询该玩家在工会的职务信息
-                        //sql="select duty from union_duty where UUID = '" + strings[1]  + "'";
-                        if(true){//该玩家有足够权限发布公告 level>2
-                            //发布工会公告
-                            commandSender.sendMessage("工会公告已发布！");
-                        }
-                        else{
-                            commandSender.sendMessage("权限不足！");
-                        }
+                        new BukkitRunnable(){
+                            @Override
+                            public void run() {
+                                ResultSet rs = SQLiteManager.get().findUnionDutyData(player.getName(), commandSender);
+                                try {
+                                    if(rs.next()){
+                                        String union = rs.getString("union");
+                                        int duty = rs.getInt("duty");
+                                        if(duty>2){
+                                            SQLiteManager.get().updateUnionInfoAnnouncement(strings[1], union, commandSender);
+                                            player.sendMessage("公会公告已发布！");
+                                        }
+                                        else{
+                                            player.sendMessage("你没有足够的权限！");
+                                        }
+                                    }
+                                    else{
+                                        player.sendMessage("你没有公会！");
+                                    }
+                                } catch (SQLException e) {
+                                    e.printStackTrace();
+                                }
+                            }
+                        }.runTaskAsynchronously(main.plugin);
+                        return true;
+                    }
+                    else if(strings[0].equalsIgnoreCase("list")) {
+                        new BukkitRunnable() {
+                            @Override
+                            public void run() {
+                                ResultSet rs = SQLiteManager.get().findUnionMember(strings[1], commandSender);
+                                try {
+                                    if (rs.next()) {
+                                        String union = rs.getString("union");
+                                        ResultSet rs2 = SQLiteManager.get().findUnionMember(union, commandSender);
+                                        player.sendMessage("§e" + union + "§f公会信息如下:");
+                                        ArrayList<String> members = new ArrayList<String>();
+                                        ArrayList<Integer> duties = new ArrayList<Integer>();
+                                        while (rs2.next()) {
+                                            members.add(rs2.getString("name"));
+                                            duties.add(rs2.getInt("duty"));
+                                        }
+                                        for (int i = 0; i < members.size(); i++) {
+                                            for (int j = i; j < members.size(); j++) {
+                                                if (duties.get(i) < duties.get(j)) {
+                                                    int duty = duties.get(j);
+                                                    String member = members.get(j);
+                                                    duties.set(j, duties.get(i));
+                                                    duties.set(i, duty);
+                                                    members.set(j, members.get(i));
+                                                    members.set(i, member);
+                                                }
+                                            }
+                                        }
+                                        for (int i = 0; i < members.size(); i++) {
+                                            switch (duties.get(i)) {
+                                                case 0:
+                                                    player.sendMessage("申请中:" + "§e" + members.get(i));
+                                                    break;
+                                                case 1:
+                                                    player.sendMessage("成员:" + members.get(i));
+                                                    break;
+                                                case 2:
+                                                    player.sendMessage("组长:" + members.get(i));
+                                                    break;
+                                                case 3:
+                                                    player.sendMessage("副会长:" + members.get(i));
+                                                    break;
+                                                case 4:
+                                                    player.sendMessage("会长:" + members.get(i));
+                                                    break;
+                                                default:
+                                                    break;
+                                            }
+                                        }
+                                    } else{
+                                        player.sendMessage("该公会名称不存在！");
+                                    }
+                                } catch (SQLException e) {
+                                    e.printStackTrace();
+                                }
+                            }
+                        }.runTaskAsynchronously(main.plugin);
+                        return true;
                     }
                 }
                 else{
                     commandSender.sendMessage("参数过多或不足");
-                    return false;
                 }
             }
         }
         else{
             commandSender.sendMessage("你没有这个功能！");
         }
-        return true;
+        return false;
     }
 }

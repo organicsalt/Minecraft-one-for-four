@@ -84,16 +84,16 @@ public class invest implements CommandExecutor {
                     else if(false){//玩家付款失败或未付款
                         commandSender.sendMessage("充值失败，请重新充值！");
                     }
+                    return true;
                 }
                 else{
                     commandSender.sendMessage("参数过多或不足");
-                    return false;
                 }
             }
         }
         else{
             commandSender.sendMessage("你没有这个功能！");
         }
-        return true;
+        return false;
     }
 }

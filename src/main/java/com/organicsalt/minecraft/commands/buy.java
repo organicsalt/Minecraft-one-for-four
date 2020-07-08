@@ -21,16 +21,16 @@ public class buy implements CommandExecutor {
                 if(strings.length==0) {
                     Player player = (Player) commandSender;
                     storeInventory.storeGUI(player);
+                    return true;
                 }
                 else{
                     commandSender.sendMessage("参数过多或不足");
-                    return false;
                 }
             }
         }
         else{
             commandSender.sendMessage("你没有这个功能！");
         }
-        return true;
+        return false;
     }
 }

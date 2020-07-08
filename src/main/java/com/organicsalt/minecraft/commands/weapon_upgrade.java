@@ -19,11 +19,12 @@ public class weapon_upgrade implements CommandExecutor {
                     commandSender.sendMessage("参数过多或不足");
                     return false;
                 }
+                return true;
             }
         }
         else{
             commandSender.sendMessage("你没有这个功能！");
         }
-        return true;
+        return false;
     }
 }

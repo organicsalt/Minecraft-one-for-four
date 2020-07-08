@@ -20,12 +20,13 @@ public class query_sign implements CommandExecutor {
                 else{//如果查询不到结果
                     commandSender.sendMessage("系统没有你的签到记录!");
                 }
+                return true;
             }
 
         }
         else{
             commandSender.sendMessage("你没有这个功能！");
         }
-        return true;
+        return false;
     }
 }

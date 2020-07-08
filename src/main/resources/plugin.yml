@@ -2,7 +2,7 @@ name: Myplugin
 main: com.organicsalt.minecraft.main
 version: 1.0.0
 author: one-for-four
-depend: [Vault]
+depend: [Vault, PlayerPoints]
 commands:
   sign_in:
     description: "这个命令进行签到操作"
@@ -46,6 +46,6 @@ commands:
     permission-message: "你没权限"
   union:
     description: "这个命令进行工会相关操作"
-    usage: "使用方法:/union [create|leave|join|dismiss|info] [union]|[upgrade|demote|kick|accept|deny|trans] [player]|[announce] [words] "
+    usage: "使用方法:/union [create|leave|join|dismiss|info|list] [union]|[upgrade|demote|kick|accept|deny|trans] [player]|[announce] [words]|"
     permission: "MyPlugin.union"
     permission-message: "你没权限"
