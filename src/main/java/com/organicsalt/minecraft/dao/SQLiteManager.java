@@ -16,13 +16,23 @@ public class SQLiteManager {
 
     public void enableSQLite(){
         connectSQLite();
-        String cmd = SQLCommand.CREATE_TABLE_UNION_INFO.commandToString();
-        String cmd2 = SQLCommand.CREATE_TABLE_UNION_DUTY.commandToString();
+        String cmd_union_info = SQLCommand.CREATE_TABLE_UNION_INFO.commandToString();
+        String cmd_union_duty = SQLCommand.CREATE_TABLE_UNION_DUTY.commandToString();
+        String cmd_weapon = SQLCommand.CREATE_TABLE_WEAPON.commandToString();
+        String cmd_sign = SQLCommand.CREATE_TABLE_SIGN.commandToString();
+        String cmd_vip = SQLCommand.CREATE_TABLE_VIP.commandToString();
+
         try {
-            PreparedStatement ps = connection.prepareStatement(cmd);
-            PreparedStatement ps2 = connection.prepareStatement(cmd2);
-            ps.executeUpdate();
-            ps2.executeUpdate();
+            PreparedStatement ps_union_info = connection.prepareStatement(cmd_union_info);
+            PreparedStatement ps_union_duty = connection.prepareStatement(cmd_union_duty);
+            PreparedStatement ps_weapon = connection.prepareStatement(cmd_weapon);
+            PreparedStatement ps_sign = connection.prepareStatement(cmd_sign);
+            PreparedStatement ps_vip = connection.prepareStatement(cmd_vip);
+            ps_union_info.executeUpdate();
+            ps_union_duty.executeUpdate();
+            ps_weapon.executeUpdate();
+            ps_sign.executeUpdate();
+            ps_vip.executeUpdate();
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -86,6 +96,48 @@ public class SQLiteManager {
         }
     }
 
+    public void insertData(String weapon, int level, int effect){
+        try {
+            PreparedStatement ps;
+            String s = SQLCommand.ADD_DATA_WEAPON.commandToString();
+            ps = connection.prepareStatement(s);
+            ps.setString(1, weapon);
+            ps.setInt(2, level);
+            ps.setInt(3, effect);
+            doCommand(ps);
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void insertData(String name, int date){
+        try {
+            PreparedStatement ps;
+            String s = SQLCommand.ADD_DATA_SIGN.commandToString();
+            ps = connection.prepareStatement(s);
+            ps.setString(1, name);
+            ps.setInt(2, date);
+            doCommand(ps);
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void insertData(String name, int level, int point, int gift){
+        try {
+            PreparedStatement ps;
+            String s = SQLCommand.ADD_DATA_VIP.commandToString();
+            ps = connection.prepareStatement(s);
+            ps.setString(1, name);
+            ps.setInt(2, level);
+            ps.setInt(3, point);
+            ps.setInt(4, gift);
+            doCommand(ps);
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
     public void deleteUnionData(String data, int type) { //0删UNION_INFO 1删UNION_DUTY
         try {
             PreparedStatement ps;
@@ -98,6 +150,17 @@ public class SQLiteManager {
             }
             ps = connection.prepareStatement(s);
             ps.setString(1, data);
+            doCommand(ps);
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void deleteSignData(){
+        try {
+            PreparedStatement ps;
+            String s = SQLCommand.DELETE_DATA_SIGN.commandToString();
+            ps = connection.prepareStatement(s);
             doCommand(ps);
         } catch (SQLException e) {
             e.printStackTrace();
@@ -143,6 +206,45 @@ public class SQLiteManager {
         return rs;
     }
 
+    public ResultSet findWeaponData(String weapon){
+        ResultSet rs=null;
+        try {
+            String s = SQLCommand.SELECT_DATA_WEAPON.commandToString();
+            PreparedStatement ps = connection.prepareStatement(s);
+            ps.setString(1, weapon);
+            rs = ps.executeQuery();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return rs;
+    }
+
+    public ResultSet findSignData(String name){
+        ResultSet rs=null;
+        try {
+            String s = SQLCommand.SELECT_DATA_SIGN.commandToString();
+            PreparedStatement ps = connection.prepareStatement(s);
+            ps.setString(1, name);
+            rs = ps.executeQuery();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return rs;
+    }
+
+    public ResultSet findVIPData(String name){
+        ResultSet rs=null;
+        try {
+            String s = SQLCommand.SELECT_DATA_VIP.commandToString();
+            PreparedStatement ps = connection.prepareStatement(s);
+            ps.setString(1, name);
+            rs = ps.executeQuery();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return rs;
+    }
+
     public void updateUnionDuty(String name, int duty){
         try {
             String s = SQLCommand.UPDATE_DATA_UNION_DUTY.commandToString();
@@ -173,6 +275,34 @@ public class SQLiteManager {
             PreparedStatement ps = connection.prepareStatement(s);
             ps.setString(1, announcement);
             ps.setString(2, union);
+            doCommand(ps);
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void updateWeapon(String weapon_update, int level, int effect, String weapon){
+        try {
+            String s = SQLCommand.UPDATE_DATA_WEAPON.commandToString();
+            PreparedStatement ps = connection.prepareStatement(s);
+            ps.setString(1, weapon_update);
+            ps.setInt(2, level);
+            ps.setInt(3, effect);
+            ps.setString(4, weapon);
+            doCommand(ps);
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void updateVIP(int level, int point, int gift, String name){
+        try {
+            String s = SQLCommand.UPDATE_DATA_VIP.commandToString();
+            PreparedStatement ps = connection.prepareStatement(s);
+            ps.setInt(1, level);
+            ps.setInt(2, point);
+            ps.setInt(3, gift);
+            ps.setString(4, name);
             doCommand(ps);
         } catch (SQLException e) {
             e.printStackTrace();

@@ -4,6 +4,9 @@ import com.organicsalt.minecraft.GUI.effectInventory;
 import com.organicsalt.minecraft.GUI.storeInventory;
 import com.organicsalt.minecraft.GUI.upgradeInventory;
 import com.organicsalt.minecraft.main;
+import com.organicsalt.minecraft.util.PlayerPointsUtil;
+import org.black_ixx.playerpoints.PlayerPoints;
+import org.bukkit.Material;
 import org.bukkit.entity.HumanEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -11,6 +14,10 @@ import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.inventory.Inventory;
+import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.ItemMeta;
+
+import java.util.Arrays;
 
 public class InventoryGUIEvent implements Listener {
     @EventHandler(priority = EventPriority.HIGH)
@@ -24,52 +31,159 @@ public class InventoryGUIEvent implements Listener {
             //main.plugin.getLogger().info((String.valueOf(rawslot)));
             if((rawslot>=0&&rawslot<=8)||rawslot==49){
                 event.setCancelled(true);
-                /*
-                //连接数据库查询物品价格sign_money|upgrade_money|effects_money,和玩家现有金钱money
-                if(strings[0].equalsIgnoreCase("sign")){
-                    //sql="select amount from itemInBag where UUID='" + id + "' and item='stamps'"; //获取现有点券money
-                    if(true){//如果1*amount<=money
-                        //sql="select amount from itemInBag where UUID='" + id + "' and item='complement_card'";  //查询玩家现有补签卡张数complement_card
-                        //将money和amount数量的sign写入数据库
-                        //complement_card=complement_card+amount;
-                        //money=money-1*amount;
-                        //sql="update itemInBag set amount = "+complement_card+" where UUID='" + id + " and item='complement_card'";
-                        //sql="update itemInBag set amount = "+money+" where UUID='" + id + " and item='stamps'";
+                if(rawslot==0){
+                    PlayerPoints points=PlayerPointsUtil.getPlayerPoints();
+                    int complement=main.plugin.getConfig().getInt("complement");
+                    if(points.getAPI().take(player.getUniqueId(),1*complement)){
+                        ItemStack itemStack = new ItemStack(Material.GOLD_INGOT);
+                        ItemMeta itemMeta = itemStack.getItemMeta();
+                        itemMeta.setDisplayName("§e这是补签卡");
+                        itemMeta.setLore(Arrays.asList("§b该补签卡可以用来补签","§6输入/complement_sign [date]命令进行补签","§4补签之后可以领取签到奖励","§2补签之后还可以领取累计签到奖励"));
+                        itemStack.setItemMeta(itemMeta);
+                        itemStack.setAmount(1);
+                        player.getInventory().addItem(itemStack);
+                        player.sendMessage("购买§e1§f个§9补签卡§f成功！");
                     }
-                    else if(false){
-                        commandSender.sendMessage("余额不足，购买补签卡失败，请充值！");
-                    }
-                }
-                else if(strings[0].equalsIgnoreCase("upgrade")){
-                    //sql="select amount from itemInBag where UUID='" + id + "' and item='stamps'"; //获取现有点券money
-                    if(true){//如果5*amount<=money
-                        //sql="select amount from itemInBag where UUID='" + id + "' and item='upgrade_stone'";  //查询玩家现有强化石个数upgrade_stone
-                        //将money和amount数量的upgrade_stone写入数据库
-                        //upgrade_stone=upgrade_stone+amount;
-                        //money=money-5*amount;
-                        //sql="update itemInBag set amount = "+upgrade_stone+" where UUID='" + id + " and item='upgrade_stone'";
-                        //sql="update itemInBag set amount = "+money+" where UUID='" + id + " and item='stamps'";
-                    }
-                    else if(false){
-                        commandSender.sendMessage("余额不足，购买强化石失败，请充值！");
+                    else{
+                        player.sendMessage("账户余额不足！");
                     }
                 }
-                else if(strings[0].equalsIgnoreCase("effects")){
-                    //sql="select amount from itemInBag where UUID='" + id + "' and item='stamps'"; //获取现有点券money
-                    if(true){//如果20*amount<=money
-                        //sql="select amount from itemInBag where UUID='" + id + "' and item='effects_stone'";  //查询玩家现有强化石个数effects_stone
-                        //将money和amount数量的effects_stone写入数据库
-                        //effects_stone=effects_stone+amount;
-                        //money=money-20*amount;
-                        //sql="update itemInBag set amount = "+money+" where UUID='" + id + " and item='effects_stone'";
-                        //sql="update itemInBag set amount = "+money+" where UUID='" + id + " and item='stamps'";
+                else if(rawslot==1){
+                    PlayerPoints points=PlayerPointsUtil.getPlayerPoints();
+                    int complement=main.plugin.getConfig().getInt("complement");
+                    if(points.getAPI().take(player.getUniqueId(),10*complement)){
+                        ItemStack itemStack = new ItemStack(Material.GOLD_INGOT);
+                        ItemMeta itemMeta = itemStack.getItemMeta();
+                        itemMeta.setDisplayName("§e这是补签卡");
+                        itemMeta.setLore(Arrays.asList("§b该补签卡可以用来补签","§6输入/complement_sign [date]命令进行补签","§4补签之后可以领取签到奖励","§2补签之后还可以领取累计签到奖励"));
+                        itemStack.setItemMeta(itemMeta);
+                        itemStack.setAmount(10);
+                        player.getInventory().addItem(itemStack);
+                        player.sendMessage("购买§e10§f个§9补签卡§f成功！");
                     }
-                    else if(false){
-                        commandSender.sendMessage("余额不足，购买装扮石失败，请充值！");
+                    else{
+                        player.sendMessage("账户余额不足！");
                     }
                 }
+                else if(rawslot==2){
+                    PlayerPoints points=PlayerPointsUtil.getPlayerPoints();
+                    int complement=main.plugin.getConfig().getInt("complement");
+                    if(points.getAPI().take(player.getUniqueId(),64*complement)){
+                        ItemStack itemStack = new ItemStack(Material.GOLD_INGOT);
+                        ItemMeta itemMeta = itemStack.getItemMeta();
+                        itemMeta.setDisplayName("§e这是补签卡");
+                        itemMeta.setLore(Arrays.asList("§b该补签卡可以用来补签","§6输入/complement_sign [date]命令进行补签","§4补签之后可以领取签到奖励","§2补签之后还可以领取累计签到奖励"));
+                        itemStack.setItemMeta(itemMeta);
+                        itemStack.setAmount(64);
+                        player.getInventory().addItem(itemStack);
+                        player.sendMessage("购买§e64§f个§9补签卡§f成功！");
+                    }
+                    else{
+                        player.sendMessage("账户余额不足！");
+                    }
+                }
+                else if(rawslot==3){
+                    PlayerPoints points=PlayerPointsUtil.getPlayerPoints();
+                    int upgrade=main.plugin.getConfig().getInt("upgrade");
+                    if(points.getAPI().take(player.getUniqueId(),1*upgrade)){
+                        ItemStack itemStack = new ItemStack(Material.DIAMOND);
+                        ItemMeta itemMeta = itemStack.getItemMeta();
+                        itemMeta.setDisplayName("§e这是强化石");
+                        itemMeta.setLore(Arrays.asList("§b该石头可以用来强化武器","§6输入/weapon_upgrade 命令进行强化","§4强化有可能失败","§2武器强化等级越高强化成功率越低"));
+                        itemStack.setItemMeta(itemMeta);
+                        itemStack.setAmount(1);
+                        player.getInventory().addItem(itemStack);
+                        player.sendMessage("购买§e1§f个§9强化石§f成功！");
+                    }else{
+                        player.sendMessage("账户余额不足！");
+                    }
 
-            */
+                }
+                else if(rawslot==4){
+                    PlayerPoints points=PlayerPointsUtil.getPlayerPoints();
+                    int upgrade=main.plugin.getConfig().getInt("upgrade");
+                    if(points.getAPI().take(player.getUniqueId(),10*upgrade)){
+                        ItemStack itemStack = new ItemStack(Material.DIAMOND);
+                        ItemMeta itemMeta = itemStack.getItemMeta();
+                        itemMeta.setDisplayName("§e这是强化石");
+                        itemMeta.setLore(Arrays.asList("§b该石头可以用来强化武器","§6输入/weapon_upgrade 命令进行强化","§4强化有可能失败","§2武器强化等级越高强化成功率越低"));
+                        itemStack.setItemMeta(itemMeta);
+                        itemStack.setAmount(10);
+                        player.getInventory().addItem(itemStack);
+                        player.sendMessage("购买§e10§f个§9强化石§f成功！");
+                    }
+                    else{
+                        player.sendMessage("账户余额不足！");
+                    }
+                }
+                else if(rawslot==5){
+                    PlayerPoints points=PlayerPointsUtil.getPlayerPoints();
+                    int upgrade=main.plugin.getConfig().getInt("upgrade");
+                    if(points.getAPI().take(player.getUniqueId(),64*upgrade)){
+                        ItemStack itemStack = new ItemStack(Material.DIAMOND);
+                        ItemMeta itemMeta = itemStack.getItemMeta();
+                        itemMeta.setDisplayName("§e这是强化石");
+                        itemMeta.setLore(Arrays.asList("§b该石头可以用来强化武器","§6输入/weapon_upgrade 命令进行强化","§4强化有可能失败","§2武器强化等级越高强化成功率越低"));
+                        itemStack.setItemMeta(itemMeta);
+                        itemStack.setAmount(64);
+                        player.getInventory().addItem(itemStack);
+                        player.sendMessage("购买§e64§f个§9强化石§f成功！");
+                    }
+                    else{
+                        player.sendMessage("账户余额不足！");
+                    }
+                }
+                else if(rawslot==6){
+                    PlayerPoints points=PlayerPointsUtil.getPlayerPoints();
+                    int effect=main.plugin.getConfig().getInt("effect");
+                    if(points.getAPI().take(player.getUniqueId(),1*effect)){
+                        ItemStack itemStack=new ItemStack(Material.FLINT);
+                        ItemMeta itemMeta = itemStack.getItemMeta();
+                        itemMeta.setDisplayName("§e这是装扮石");
+                        itemMeta.setLore(Arrays.asList("§b该石头可以用来开启武器特效","§6输入/weapon_effects up命令进行开启","§4用装扮石赋予武器特效只能覆盖无法叠加","§2武器不同强化等级自身特效不一样"));
+                        itemStack.setItemMeta(itemMeta);
+                        itemStack.setAmount(1);
+                        player.getInventory().addItem(itemStack);
+                        player.sendMessage("购买§e1§f个§9装扮石§f成功！");
+                    }
+                    else{
+                        player.sendMessage("账户余额不足！");
+                    }
+                }
+                else if(rawslot==7){
+                    PlayerPoints points=PlayerPointsUtil.getPlayerPoints();
+                    int effect=main.plugin.getConfig().getInt("effect");
+                    if(points.getAPI().take(player.getUniqueId(),10*effect)){
+                        ItemStack itemStack=new ItemStack(Material.FLINT);
+                        ItemMeta itemMeta = itemStack.getItemMeta();
+                        itemMeta.setDisplayName("§e这是装扮石");
+                        itemMeta.setLore(Arrays.asList("§b该石头可以用来开启武器特效","§6输入/weapon_effects up命令进行开启","§4用装扮石赋予武器特效只能覆盖无法叠加","§2武器不同强化等级自身特效不一样"));
+                        itemStack.setItemMeta(itemMeta);
+                        itemStack.setAmount(10);
+                        player.getInventory().addItem(itemStack);
+                        player.sendMessage("购买§e10§f个§9装扮石§f成功！");
+                    }
+                    else{
+                        player.sendMessage("账户余额不足！");
+                    }
+                }
+                else if(rawslot==8){
+                    PlayerPoints points=PlayerPointsUtil.getPlayerPoints();
+                    int effect=main.plugin.getConfig().getInt("effect");
+                    if(points.getAPI().take(player.getUniqueId(),64*effect)){
+                        ItemStack itemStack=new ItemStack(Material.FLINT);
+                        ItemMeta itemMeta = itemStack.getItemMeta();
+                        itemMeta.setDisplayName("§e这是装扮石");
+                        itemMeta.setLore(Arrays.asList("§b该石头可以用来开启武器特效","§6输入/weapon_effects up命令进行开启","§4用装扮石赋予武器特效只能覆盖无法叠加","§2武器不同强化等级自身特效不一样"));
+                        itemStack.setItemMeta(itemMeta);
+                        itemStack.setAmount(64);
+                        player.getInventory().addItem(itemStack);
+                        player.sendMessage("购买§e64§f个§9装扮石§f成功！");
+                    }
+                    else{
+                        player.sendMessage("账户余额不足！");
+                    }
+                }
                 if(rawslot==49){
                     player.sendMessage("退出商城");
                     player.closeInventory();

@@ -18,6 +18,7 @@ public class main extends JavaPlugin{
 
     @Override
     public void onEnable() {
+
         if(!getDataFolder().exists()){
             getDataFolder().mkdir();
         }
@@ -26,6 +27,7 @@ public class main extends JavaPlugin{
             saveDefaultConfig();
         }
         saveConfig();
+
         new BukkitRunnable(){
             @Override
             public void run() {
@@ -44,6 +46,11 @@ public class main extends JavaPlugin{
         }
         else{
             getLogger().info(("PlayerPoints插件启动失败！"));
+        }
+        if(Bukkit.getPluginManager().isPluginEnabled("VexView")){
+            getLogger().info("Vex界面启动成功");
+        }else{
+            getLogger().info("Vex界面启动失败");
         }
         Bukkit.getPluginManager().registerEvents(new PlayerEvent(),this);
         Bukkit.getPluginManager().registerEvents(new EntityEvent(),this);

@@ -21,6 +21,8 @@ import org.bukkit.scheduler.BukkitRunnable;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.UUID;
 
 public class PlayerEvent implements Listener {
@@ -31,81 +33,103 @@ public class PlayerEvent implements Listener {
     public void PlayerJoin(PlayerJoinEvent event){
         main.plugin.getLogger().info("触发了加入服务器事件:"+event.getPlayer().getName());
         Player player=event.getPlayer();
-        UUID id = player.getUniqueId();
-        //sql="select * from vip where UUID = '" + id + "'";
-        if(true){//该用户UUID存在，能查询到结果
-            if(true){//如果是vip
-                player.sendMessage("§4欢迎至尊VIP进来:§c【"+player.getName()+"】");
+        new BukkitRunnable(){
+            @Override
+            public void run() {
+                ResultSet rs=SQLiteManager.get().findVIPData(player.getName());
+                try {
+                    if (!rs.next()) {
+                        int vip_point = 0;
+                        int vip_level = 0;
+                        int gift = 0;
+                        SQLiteManager.get().insertData(player.getName(), vip_level, vip_point, gift);
+                    }
+                    else{
+                        int vip_point = rs.getInt("point");
+                        int vip_level = rs.getInt("level");
+                        int gift = rs.getInt("gift");
+                        if(vip_level>1&&vip_level<=6){
+                            player.sendMessage("§4欢迎VIP进来:§e"+player.getName()+"");
+                        }
+                        else if(vip_level>6) {
+                            player.sendMessage("§4欢迎至尊VIP进来:§c【"+player.getName()+"】");
+                        }
+                        int[] gifts=new int[15];
+                        int i=vip_level;
+                        boolean flag=false;
+                        while(i>0){
+                            if((gift&1)==0){
+                                gifts[i]=1;
+                                flag=true;
+                            }
+                            gift=gift>>1;
+                            i=i-1;
+                        }
+                        if(flag){
+                            player.sendMessage("你有如下等级VIP礼包尚未领取，请输入/vip bonus [count]进行领取！");
+                            for(int j=1;j<=vip_level;j++){
+                                if(gifts[j]==1) player.sendMessage("§c"+j);
+                            }
+                        }
+                    }
+                }catch(SQLException e){
+                    e.printStackTrace();
+                }
             }
-        }
-        else{//该用户不存在，为他创建一张新表
-            //sql="insert into vip values('" + id + "', 0, 0, 0)";
-        }
+        }.runTaskAsynchronously(main.plugin);
     }
 
-    @EventHandler
+    @EventHandler(priority = EventPriority.HIGH)
     public void playerCommandPreprocess(PlayerCommandPreprocessEvent event){
-       // main.plugin.getLogger().info("触发了命令执行事件:"+event.getPlayer().getName());
-        if(points>0){
-            int points2 = PlayerPointsUtil.getPlayerPoints().getAPI().look(event.getPlayer().getUniqueId());
-            //event.getPlayer().sendMessage(event.getPlayer().getDisplayName()+"现有点券是"+points2);
-            //event.getPlayer().sendMessage(event.getPlayer().getDisplayName()+"原有点券是"+points);
-            if(points2-points>0){
-                int vip=points2-points;
-                //vip_point=vip_point+vip;
-                //更新玩家vip_grade信息
-                //更新玩家vip_level信息
-                //sql="update itemInBag set amount = "+money+" where UUID='" + id + " and item='stamps'"; ?
-                //sql="update vip set vip_point = "+vip_point+" where UUID='" + id + "'";
-                            /*
-                            int vip_level=0;
-                            if(vip_point>=50000){
-                                vip_level=13;
+        int points2 = PlayerPointsUtil.getPlayerPoints().getAPI().look(event.getPlayer().getUniqueId());
+        if(points>0&&points2-points>0){
+            int vip=points2-points;
+            new BukkitRunnable(){
+                @Override
+                public void run() {
+                    ResultSet rs=SQLiteManager.get().findVIPData(event.getPlayer().getName());
+                    try {
+                        if (rs.next()) {
+                            int vip_point = rs.getInt("point") + vip;
+                            int vip_level = 0;
+                            int gift = rs.getInt("gift");
+                            if (vip_point >= 50000) {
+                                vip_level = 13;
+                            } else if (vip_point >= 20000) {
+                                vip_level = 12;
+                            } else if (vip_point >= 10000) {
+                                vip_level = 11;
+                            } else if (vip_point >= 5000) {
+                                vip_level = 10;
+                            } else if (vip_point >= 2000) {
+                                vip_level = 9;
+                            } else if (vip_point >= 1000) {
+                                vip_level = 8;
+                            } else if (vip_point >= 500) {
+                                vip_level = 7;
+                            } else if (vip_point >= 200) {
+                                vip_level = 6;
+                            } else if (vip_point >= 100) {
+                                vip_level = 5;
+                            } else if (vip_point >= 50) {
+                                vip_level = 4;
+                            } else if (vip_point >= 20) {
+                                vip_level = 3;
+                            } else if (vip_point >= 10) {
+                                vip_level = 2;
+                            } else if (vip_point >= 1) {
+                                vip_level = 1;
                             }
-                            else if(vip_point>=20000){
-                                vip_level=12;
-                            }
-                            else if(vip_point>=10000){
-                                vip_level=11;
-                            }
-                            else if(vip_point>=5000){
-                                vip_level=10；
-                            }
-                            else if(vip_point>=2000){
-                                vip_level=9；
-                            }
-                            else if(vip_point>=1000){
-                                vip_level=8；
-                            }
-                            else if(vip_point>=500){
-                                vip_level=7；
-                            }
-                            else if(vip_point>=200){
-                                vip_level=6；
-                            }
-                            else if(vip_point>=100){
-                                vip_level=5；
-                            }else if(vip_point>=50){
-                                vip_level=4；
-                            }else if(vip_point>=20){
-                                vip_level=3；
-                            }else if(vip_point>=10){
-                                vip_level=2；
-                            }
-                            else if(vip_point>=1){
-                                vip_level=1；
-                            }
-                            */
-                //sql="update vip set vip_level = "+vip_level+" where UUID='" + id + "'";
-                event.getPlayer().sendMessage("VIP信息已更新！");
-            }
-            points=points2;
+                            SQLiteManager.get().updateVIP(vip_level,vip_point, gift, event.getPlayer().getName());
+                        }
+                    }catch(SQLException e){
+                        e.printStackTrace();
+                    }
+                }
+            }.runTaskAsynchronously(main.plugin);
+            event.getPlayer().sendMessage("VIP信息已更新！");
         }
-        else{
-            int points2 = PlayerPointsUtil.getPlayerPoints().getAPI().look(event.getPlayer().getUniqueId());
-            //event.getPlayer().sendMessage(event.getPlayer().getDisplayName()+"现有点券是"+points2);
-            points=points2;
-        }
+        points=points2;
     }
 
     @EventHandler
@@ -113,8 +137,6 @@ public class PlayerEvent implements Listener {
         if(AroundEffect.status==true){ //当前特效已开启
             Player player = event.getPlayer();
             if (player.getItemInHand().getType() == Material.IRON_SWORD) {  //IRON_SWORD
-                // 在给定坐标中生成一道闪电. 在本例中, 这个坐标是玩家准星瞄准的地方.
-                // 只能指向1格以内的坐标.
                 player.getWorld().strikeLightningEffect(player.getTargetBlock(null,1).getLocation());
             }
             else if(player.getItemInHand().getType()==Material.WOOD_SWORD){
@@ -132,13 +154,6 @@ public class PlayerEvent implements Listener {
     public void PlayerMove(PlayerMoveEvent event){
         Player player=event.getPlayer();
         String name=player.getName();
-        /*
-        ItemStack stack=player.getItemInHand();
-        if(stack!=null) {
-            String data = SaveItemStack.ToData(stack);
-            player.sendMessage("长度:"+data.length());
-        }
-        */
         new BukkitRunnable() {
             @Override
             public void run() {
@@ -171,24 +186,4 @@ public class PlayerEvent implements Listener {
             }
         }.runTaskAsynchronously(main.plugin);
     }
-
-    /*没作用
-    @EventHandler
-    public void PlayerItemHeld(PlayerItemHeldEvent event){
-        Player player=event.getPlayer();
-        player.sendMessage("物品已更换:"+event.getPlayer().getItemInHand().getItemMeta().getDisplayName());
-        if(player.getItemInHand().getType()==Material.IRON_SWORD){
-            AroundEffect aroundEffect = new AroundEffect(player, Effect.ENDER_SIGNAL);
-            aroundEffect.startEffect();
-        }
-        else if(player.getItemInHand().getType() == Material.DIAMOND_SWORD) {
-            AroundEffect aroundEffect = new AroundEffect(player, Effect.SMOKE);
-            aroundEffect.startEffect();
-        }
-        else if (player.getItemInHand().getType() == Material.WOOD_SWORD) {
-            AroundEffect aroundEffect = new AroundEffect(player, Effect.MOBSPAWNER_FLAMES);
-            aroundEffect.startEffect();
-        }
-    }
-    */
 }

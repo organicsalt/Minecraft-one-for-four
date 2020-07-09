@@ -60,7 +60,7 @@
     <property name="RunOnceActivity.ShowReadmeOnStart" value="true" />
     <property name="WebServerToolWindowFactoryState" value="false" />
     <property name="aspect.path.notification.shown" value="true" />
-    <property name="last_opened_file_path" value="$PROJECT_DIR$/src/main/resources" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$/libs" />
     <property name="settings.editor.selected.configurable" value="reference.settingsdialog.project.gradle" />
   </component>
   <component name="RecentsManager">
@@ -68,8 +68,8 @@
       <recent name="com.organicsalt.minecraft.util" />
     </key>
     <key name="CopyFile.RECENT_KEYS">
-      <recent name="C:\Users\1\Desktop\MinecraftPlugin\one-for-four\src\main\resources" />
       <recent name="C:\Users\1\Desktop\MinecraftPlugin\one-for-four\libs" />
+      <recent name="C:\Users\1\Desktop\MinecraftPlugin\one-for-four\src\main\resources" />
     </key>
   </component>
   <component name="RunManager" selected="Gradle.one-for-four [clean]">
@@ -142,7 +142,8 @@
       <workItem from="1594112785957" duration="45000" />
       <workItem from="1594117971519" duration="2521000" />
       <workItem from="1594168321151" duration="18943000" />
-      <workItem from="1594260917658" duration="3317000" />
+      <workItem from="1594260917658" duration="16842000" />
+      <workItem from="1594286149131" duration="6000" />
     </task>
     <servers />
   </component>
@@ -162,38 +163,38 @@
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
     <state x="1036" y="408" key="FileChooserDialogImpl/0.0.1920.1040@0.0.1920.1040" timestamp="1593736338351" />
-    <state width="1665" height="319" key="GridCell.Tab.0.bottom" timestamp="1594264334067">
+    <state width="1665" height="319" key="GridCell.Tab.0.bottom" timestamp="1594286127350">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
-    <state width="1665" height="319" key="GridCell.Tab.0.bottom/0.0.1920.1040@0.0.1920.1040" timestamp="1594264334067" />
-    <state width="1665" height="319" key="GridCell.Tab.0.center" timestamp="1594264334067">
+    <state width="1665" height="319" key="GridCell.Tab.0.bottom/0.0.1920.1040@0.0.1920.1040" timestamp="1594286127350" />
+    <state width="1665" height="319" key="GridCell.Tab.0.center" timestamp="1594286127350">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
-    <state width="1665" height="319" key="GridCell.Tab.0.center/0.0.1920.1040@0.0.1920.1040" timestamp="1594264334067" />
-    <state width="1665" height="319" key="GridCell.Tab.0.left" timestamp="1594264334067">
+    <state width="1665" height="319" key="GridCell.Tab.0.center/0.0.1920.1040@0.0.1920.1040" timestamp="1594286127350" />
+    <state width="1665" height="319" key="GridCell.Tab.0.left" timestamp="1594286127350">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
-    <state width="1665" height="319" key="GridCell.Tab.0.left/0.0.1920.1040@0.0.1920.1040" timestamp="1594264334067" />
-    <state width="1665" height="319" key="GridCell.Tab.0.right" timestamp="1594264334067">
+    <state width="1665" height="319" key="GridCell.Tab.0.left/0.0.1920.1040@0.0.1920.1040" timestamp="1594286127350" />
+    <state width="1665" height="319" key="GridCell.Tab.0.right" timestamp="1594286127350">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
-    <state width="1665" height="319" key="GridCell.Tab.0.right/0.0.1920.1040@0.0.1920.1040" timestamp="1594264334067" />
+    <state width="1665" height="319" key="GridCell.Tab.0.right/0.0.1920.1040@0.0.1920.1040" timestamp="1594286127350" />
     <state x="435" y="185" key="SettingsEditor" timestamp="1594028149200">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
     <state x="435" y="185" key="SettingsEditor/0.0.1920.1040@0.0.1920.1040" timestamp="1594028149200" />
-    <state x="640" y="344" key="com.intellij.ide.util.TipDialog" timestamp="1594168321175">
+    <state x="640" y="344" key="com.intellij.ide.util.TipDialog" timestamp="1594286148814">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
-    <state x="640" y="344" key="com.intellij.ide.util.TipDialog/0.0.1920.1040@0.0.1920.1040" timestamp="1594168321175" />
+    <state x="640" y="344" key="com.intellij.ide.util.TipDialog/0.0.1920.1040@0.0.1920.1040" timestamp="1594286148814" />
     <state x="470" y="293" key="run.anything.popup" timestamp="1594206623100">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
     <state x="470" y="293" key="run.anything.popup/0.0.1920.1040@0.0.1920.1040" timestamp="1594206623100" />
-    <state x="990" y="361" width="672" height="678" key="search.everywhere.popup" timestamp="1594199992290">
+    <state x="990" y="361" width="672" height="678" key="search.everywhere.popup" timestamp="1594278292380">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
-    <state x="990" y="361" width="672" height="678" key="search.everywhere.popup/0.0.1920.1040@0.0.1920.1040" timestamp="1594199992290" />
+    <state x="990" y="361" width="672" height="678" key="search.everywhere.popup/0.0.1920.1040@0.0.1920.1040" timestamp="1594278292380" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
@@ -207,6 +208,11 @@
           <url>file://$PROJECT_DIR$/src/main/java/com/organicsalt/minecraft/dao/SQLCommand.java</url>
           <line>26</line>
           <option name="timeStamp" value="2" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/src/main/java/com/organicsalt/minecraft/event/InventoryGUIEvent.java</url>
+          <line>30</line>
+          <option name="timeStamp" value="3" />
         </line-breakpoint>
       </breakpoints>
     </breakpoint-manager>
