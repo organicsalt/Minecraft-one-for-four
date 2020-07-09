@@ -19,6 +19,14 @@ public enum SQLCommand {
                     "PRIMARY KEY (`name`))"
     ),
 
+    CREATE_TABLE_WEAPON_UPGRADE(
+            "CREATE TABLE IF NOT EXISTS `WEAPON_UPGRADE` (" +
+                    "`weapon` VARCHAR(50)," +
+                    "`level` INT UNSIGNED," +
+                    "`name` VARCHAR(50)," +
+                    "PRIMARY KEY (`weapon`))"
+    ),
+
     ADD_DATA_UNION_INFO(
             "INSERT INTO `UNION_INFO` " +
                     "(`union`, `announcement`,'name','x','y','z')" +

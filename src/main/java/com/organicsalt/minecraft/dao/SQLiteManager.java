@@ -37,12 +37,11 @@ public class SQLiteManager {
         }
     }
 
-    public void doCommand(PreparedStatement ps, CommandSender sender)
+    public void doCommand(PreparedStatement ps)
     {
         try {
             ps.executeUpdate();
         } catch (SQLException e) {
-            sender.sendMessage("执行指令失败，以下为错误提示");
             e.printStackTrace();
         }
     }
@@ -56,7 +55,7 @@ public class SQLiteManager {
         }
     }
 
-    public void insertData(String union, String announcement, String name, double x, double y, double z, CommandSender sender) {
+    public void insertData(String union, String announcement, String name, double x, double y, double z) {
         try {
             PreparedStatement ps;
             String s = SQLCommand.ADD_DATA_UNION_INFO.commandToString();
@@ -67,13 +66,13 @@ public class SQLiteManager {
             ps.setDouble(4, x);
             ps.setDouble(5, y);
             ps.setDouble(6, z);
-            doCommand(ps, sender);
+            doCommand(ps);
         } catch (SQLException e) {
             e.printStackTrace();
         }
     }
 
-    public void insertData(String name, String union, int duty, CommandSender sender) {
+    public void insertData(String name, String union, int duty) {
         try {
             PreparedStatement ps;
             String s = SQLCommand.ADD_DATA_UNION_DUTY.commandToString();
@@ -81,13 +80,13 @@ public class SQLiteManager {
             ps.setString(1, name);
             ps.setString(2, union);
             ps.setInt(3, duty);
-            doCommand(ps, sender);
+            doCommand(ps);
         } catch (SQLException e) {
             e.printStackTrace();
         }
     }
 
-    public void deleteUnionData(String data, int type, CommandSender sender) { //0删UNION_INFO 1删UNION_DUTY
+    public void deleteUnionData(String data, int type) { //0删UNION_INFO 1删UNION_DUTY
         try {
             PreparedStatement ps;
             String s=null;
@@ -99,32 +98,26 @@ public class SQLiteManager {
             }
             ps = connection.prepareStatement(s);
             ps.setString(1, data);
-            doCommand(ps, sender);
+            doCommand(ps);
         } catch (SQLException e) {
             e.printStackTrace();
         }
     }
 
-    public ResultSet  findUnionData(String union, CommandSender sender) {
+    public ResultSet  findUnionData(String union) {
         ResultSet rs=null;
         try {
             String s = SQLCommand.SELECT_DATA_UNION_INFO.commandToString();
             PreparedStatement ps = connection.prepareStatement(s);
             ps.setString(1, union);
             rs = ps.executeQuery();
-            /*
-            while (rs.next()) {
-                str = rs.getString("union");
-            }
-            */
         } catch (SQLException e) {
-            // TODO 自动生成的 catch 块
-            sender.sendMessage("查询失败");
+            e.printStackTrace();
         }
         return rs;
     }
 
-    public ResultSet findUnionDutyData(String name, CommandSender sender) {
+    public ResultSet findUnionDutyData(String name) {
         ResultSet rs=null;
         try {
             String s = SQLCommand.SELECT_DATA_UNION_DUTY.commandToString();
@@ -132,13 +125,12 @@ public class SQLiteManager {
             ps.setString(1, name);
             rs = ps.executeQuery();
         } catch (SQLException e) {
-            // TODO 自动生成的 catch 块
-            sender.sendMessage("查询失败");
+            e.printStackTrace();
         }
         return rs;
     }
 
-    public ResultSet findUnionMember(String union, CommandSender sender){
+    public ResultSet findUnionMember(String union){
         ResultSet rs=null;
         try {
             String s = SQLCommand.SELECT_DATA_UNION_MEMBER.commandToString();
@@ -146,43 +138,42 @@ public class SQLiteManager {
             ps.setString(1, union);
             rs = ps.executeQuery();
         } catch (SQLException e) {
-            // TODO 自动生成的 catch 块
-            sender.sendMessage("查询失败");
+            e.printStackTrace();
         }
         return rs;
     }
 
-    public void updateUnionDuty(String name, int duty, CommandSender sender){
+    public void updateUnionDuty(String name, int duty){
         try {
             String s = SQLCommand.UPDATE_DATA_UNION_DUTY.commandToString();
             PreparedStatement ps = connection.prepareStatement(s);
             ps.setInt(1, duty);
             ps.setString(2, name);
-            doCommand(ps, sender);
+            doCommand(ps);
         } catch (SQLException e) {
             e.printStackTrace();
         }
     }
 
-    public void updateUnionInfoMaster(String name, String union, CommandSender sender){
+    public void updateUnionInfoMaster(String name, String union){
         try {
             String s = SQLCommand.UPDATE_DATA_UNION_INFO_MASTER.commandToString();
             PreparedStatement ps = connection.prepareStatement(s);
             ps.setString(1, name);
             ps.setString(2, union);
-            doCommand(ps, sender);
+            doCommand(ps);
         } catch (SQLException e) {
             e.printStackTrace();
         }
     }
 
-    public void updateUnionInfoAnnouncement(String announcement, String union, CommandSender sender){
+    public void updateUnionInfoAnnouncement(String announcement, String union){
         try {
             String s = SQLCommand.UPDATE_DATA_UNION_INFO_ANNOUNCEMENT.commandToString();
             PreparedStatement ps = connection.prepareStatement(s);
             ps.setString(1, announcement);
             ps.setString(2, union);
-            doCommand(ps, sender);
+            doCommand(ps);
         } catch (SQLException e) {
             e.printStackTrace();
         }

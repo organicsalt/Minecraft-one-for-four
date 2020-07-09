@@ -27,13 +27,13 @@ public class union implements CommandExecutor {
                         new BukkitRunnable(){
                             @Override
                             public void run() {
-                                ResultSet rs = SQLiteManager.get().findUnionData(strings[1], commandSender);
+                                ResultSet rs = SQLiteManager.get().findUnionData(strings[1]);
                                 try {
                                     if(rs.next()){
                                         player.sendMessage("该公会名重复！");
                                     }
                                     else{
-                                        rs = SQLiteManager.get().findUnionDutyData(player.getName(), commandSender);
+                                        rs = SQLiteManager.get().findUnionDutyData(player.getName());
                                         if(rs.next()){
                                             player.sendMessage("该玩家已有公会！");
                                         }
@@ -41,8 +41,8 @@ public class union implements CommandExecutor {
                                             double x = player.getLocation().getX();
                                             double y = player.getLocation().getY();
                                             double z = player.getLocation().getZ();
-                                            SQLiteManager.get().insertData(strings[1], null, player.getName(), x, y, z, commandSender);
-                                            SQLiteManager.get().insertData(player.getName(),strings[1],4, commandSender);
+                                            SQLiteManager.get().insertData(strings[1], null, player.getName(), x, y, z);
+                                            SQLiteManager.get().insertData(player.getName(),strings[1],4);
                                             player.sendMessage("创建公会成功!");
                                         }
                                     }
@@ -57,14 +57,14 @@ public class union implements CommandExecutor {
                         new BukkitRunnable(){
                             @Override
                             public void run() {
-                                ResultSet rs = SQLiteManager.get().findUnionDutyData(player.getName(), commandSender);
+                                ResultSet rs = SQLiteManager.get().findUnionDutyData(player.getName());
                                 try {
                                     if(rs.next()){
                                         String union = rs.getString("union");
                                         int duty = rs.getInt("duty");
                                         if(union.equals(strings[1])){
                                             if(duty!=4){
-                                                SQLiteManager.get().deleteUnionData(player.getName(),1, commandSender);
+                                                SQLiteManager.get().deleteUnionData(player.getName(),1);
                                                 player.sendMessage("§e"+player.getName()+"退出"+"§9"+strings[1]+"§f公会成功！");
                                             }
                                             else{
@@ -89,7 +89,7 @@ public class union implements CommandExecutor {
                         new BukkitRunnable(){
                             @Override
                             public void run() {
-                                ResultSet rs = SQLiteManager.get().findUnionDutyData(player.getName(), commandSender);
+                                ResultSet rs = SQLiteManager.get().findUnionDutyData(player.getName());
                                 try {
                                     if(rs.next()){
                                         String union = rs.getString("union");
@@ -108,7 +108,7 @@ public class union implements CommandExecutor {
                                         }
                                     }
                                     else{
-                                        SQLiteManager.get().insertData(player.getName(), strings[1],0, commandSender);
+                                        SQLiteManager.get().insertData(player.getName(), strings[1],0);
                                         player.sendMessage("申请加入"+"§e"+strings[1]+"§f公会成功!");
                                     }
                                 } catch (SQLException e) {
@@ -122,7 +122,7 @@ public class union implements CommandExecutor {
                         new BukkitRunnable(){
                             @Override
                             public void run() {
-                                ResultSet rs = SQLiteManager.get().findUnionDutyData(player.getName(), commandSender);
+                                ResultSet rs = SQLiteManager.get().findUnionDutyData(player.getName());
                                 try {
                                     if(rs.next()){
                                         String union = rs.getString("union");
@@ -133,14 +133,14 @@ public class union implements CommandExecutor {
                                             }
                                             else{
                                                 ArrayList<String> members=new ArrayList<String>();
-                                                rs = SQLiteManager.get().findUnionMember(strings[1], commandSender);
+                                                rs = SQLiteManager.get().findUnionMember(strings[1]);
                                                 while(rs.next()){
                                                     members.add(rs.getString("name"));
                                                 }
                                                 for(String name:members){
-                                                    SQLiteManager.get().deleteUnionData(name,1, commandSender);
+                                                    SQLiteManager.get().deleteUnionData(name,1);
                                                 }
-                                                SQLiteManager.get().deleteUnionData(strings[1],0, commandSender);
+                                                SQLiteManager.get().deleteUnionData(strings[1],0);
                                                 player.sendMessage("公会已解散！");
                                             }
                                         }
@@ -162,7 +162,7 @@ public class union implements CommandExecutor {
                         new BukkitRunnable(){
                             @Override
                             public void run() {
-                                ResultSet rs = SQLiteManager.get().findUnionData(strings[1], commandSender);
+                                ResultSet rs = SQLiteManager.get().findUnionData(strings[1]);
                                 try {
                                     if(rs.next()){
                                         String announce = rs.getString("announcement");
@@ -192,8 +192,8 @@ public class union implements CommandExecutor {
                         new BukkitRunnable(){
                             @Override
                             public void run() {
-                                ResultSet rs = SQLiteManager.get().findUnionDutyData(strings[1], commandSender);
-                                ResultSet rs2 = SQLiteManager.get().findUnionDutyData(player.getName(), commandSender);
+                                ResultSet rs = SQLiteManager.get().findUnionDutyData(strings[1]);
+                                ResultSet rs2 = SQLiteManager.get().findUnionDutyData(player.getName());
                                 try {
                                     if(rs.next()){
                                         if(rs2.next()){
@@ -204,7 +204,7 @@ public class union implements CommandExecutor {
                                             if(union1.equals(union2)){
                                                 if(duty2-duty1>1){
                                                     duty1=duty1+1;
-                                                    SQLiteManager.get().updateUnionDuty(strings[1], duty1, commandSender);
+                                                    SQLiteManager.get().updateUnionDuty(strings[1], duty1);
                                                     player.sendMessage("§e"+strings[1]+"§f已晋升");
                                                 }
                                                 else{
@@ -233,8 +233,8 @@ public class union implements CommandExecutor {
                         new BukkitRunnable(){
                             @Override
                             public void run() {
-                                ResultSet rs = SQLiteManager.get().findUnionDutyData(strings[1], commandSender);
-                                ResultSet rs2 = SQLiteManager.get().findUnionDutyData(player.getName(), commandSender);
+                                ResultSet rs = SQLiteManager.get().findUnionDutyData(strings[1]);
+                                ResultSet rs2 = SQLiteManager.get().findUnionDutyData(player.getName());
                                 try {
                                     if(rs.next()){
                                         if(rs2.next()){
@@ -245,7 +245,7 @@ public class union implements CommandExecutor {
                                             if(union1.equals(union2)){
                                                 if(duty2-duty1>=1&&duty1>1){
                                                     duty1=duty1-1;
-                                                    SQLiteManager.get().updateUnionDuty(strings[1], duty1, commandSender);
+                                                    SQLiteManager.get().updateUnionDuty(strings[1], duty1);
                                                     player.sendMessage("§e"+strings[1]+"§f已降职");
                                                 }
                                                 else if(duty2-duty1<=1){
@@ -277,8 +277,8 @@ public class union implements CommandExecutor {
                         new BukkitRunnable(){
                             @Override
                             public void run() {
-                                ResultSet rs = SQLiteManager.get().findUnionDutyData(strings[1], commandSender);
-                                ResultSet rs2 = SQLiteManager.get().findUnionDutyData(player.getName(), commandSender);
+                                ResultSet rs = SQLiteManager.get().findUnionDutyData(strings[1]);
+                                ResultSet rs2 = SQLiteManager.get().findUnionDutyData(player.getName());
                                 try {
                                     if(rs.next()){
                                         if(rs2.next()){
@@ -288,7 +288,7 @@ public class union implements CommandExecutor {
                                             int duty2 = rs2.getInt("duty");
                                             if(union1.equals(union2)){
                                                 if(duty2-duty1>1&&duty1>=1){
-                                                    SQLiteManager.get().deleteUnionData(strings[1], 1, commandSender);
+                                                    SQLiteManager.get().deleteUnionData(strings[1], 1);
                                                     player.sendMessage("§e"+strings[1]+"§f已踢出");
                                                 }
                                                 else if(duty2-duty1<=1){
@@ -320,8 +320,8 @@ public class union implements CommandExecutor {
                         new BukkitRunnable(){
                             @Override
                             public void run() {
-                                ResultSet rs = SQLiteManager.get().findUnionDutyData(strings[1], commandSender);
-                                ResultSet rs2 = SQLiteManager.get().findUnionDutyData(player.getName(), commandSender);
+                                ResultSet rs = SQLiteManager.get().findUnionDutyData(strings[1]);
+                                ResultSet rs2 = SQLiteManager.get().findUnionDutyData(player.getName());
                                 try {
                                     if(rs.next()){
                                         if(rs2.next()){
@@ -332,7 +332,7 @@ public class union implements CommandExecutor {
                                             if(union1.equals(union2)){
                                                 if(duty2>1&&duty1==0){
                                                     duty1=1;
-                                                    SQLiteManager.get().updateUnionDuty(strings[1], duty1, commandSender);
+                                                    SQLiteManager.get().updateUnionDuty(strings[1], duty1);
                                                     player.sendMessage("§e"+strings[1]+"§f申请已通过！");
                                                 }
                                                 else if(duty2<=1){
@@ -364,8 +364,8 @@ public class union implements CommandExecutor {
                         new BukkitRunnable(){
                             @Override
                             public void run() {
-                                ResultSet rs = SQLiteManager.get().findUnionDutyData(strings[1], commandSender);
-                                ResultSet rs2 = SQLiteManager.get().findUnionDutyData(player.getName(), commandSender);
+                                ResultSet rs = SQLiteManager.get().findUnionDutyData(strings[1]);
+                                ResultSet rs2 = SQLiteManager.get().findUnionDutyData(player.getName());
                                 try {
                                     if(rs.next()){
                                         if(rs2.next()){
@@ -375,7 +375,7 @@ public class union implements CommandExecutor {
                                             int duty2 = rs2.getInt("duty");
                                             if(union1.equals(union2)){
                                                 if(duty2>1&&duty1==0){
-                                                    SQLiteManager.get().deleteUnionData(strings[1], 1, commandSender);
+                                                    SQLiteManager.get().deleteUnionData(strings[1], 1);
                                                     player.sendMessage("§e"+strings[1]+"§f申请已拒绝！");
                                                 }
                                                 else if(duty2<=1){
@@ -407,8 +407,8 @@ public class union implements CommandExecutor {
                         new BukkitRunnable(){
                             @Override
                             public void run() {
-                                ResultSet rs = SQLiteManager.get().findUnionDutyData(strings[1], commandSender);
-                                ResultSet rs2 = SQLiteManager.get().findUnionDutyData(player.getName(), commandSender);
+                                ResultSet rs = SQLiteManager.get().findUnionDutyData(strings[1]);
+                                ResultSet rs2 = SQLiteManager.get().findUnionDutyData(player.getName());
                                 try {
                                     if(rs.next()){
                                         if(rs2.next()){
@@ -420,9 +420,9 @@ public class union implements CommandExecutor {
                                                 if(duty2==4&&duty1>=1){
                                                     duty1=4;
                                                     duty2=1;
-                                                    SQLiteManager.get().updateUnionDuty(strings[1], duty1, commandSender);
-                                                    SQLiteManager.get().updateUnionDuty(player.getName(), duty2, commandSender);
-                                                    SQLiteManager.get().updateUnionInfoMaster(strings[1], union1, commandSender);
+                                                    SQLiteManager.get().updateUnionDuty(strings[1], duty1);
+                                                    SQLiteManager.get().updateUnionDuty(player.getName(), duty2);
+                                                    SQLiteManager.get().updateUnionInfoMaster(strings[1], union1);
                                                     player.sendMessage("公会已转让给§e"+strings[1]);
                                                 }
                                                 else if(duty1==0){
@@ -454,13 +454,13 @@ public class union implements CommandExecutor {
                         new BukkitRunnable(){
                             @Override
                             public void run() {
-                                ResultSet rs = SQLiteManager.get().findUnionDutyData(player.getName(), commandSender);
+                                ResultSet rs = SQLiteManager.get().findUnionDutyData(player.getName());
                                 try {
                                     if(rs.next()){
                                         String union = rs.getString("union");
                                         int duty = rs.getInt("duty");
                                         if(duty>2){
-                                            SQLiteManager.get().updateUnionInfoAnnouncement(strings[1], union, commandSender);
+                                            SQLiteManager.get().updateUnionInfoAnnouncement(strings[1], union);
                                             player.sendMessage("公会公告已发布！");
                                         }
                                         else{
@@ -478,14 +478,14 @@ public class union implements CommandExecutor {
                         return true;
                     }
                     else if(strings[0].equalsIgnoreCase("list")) {
-                        new BukkitRunnable() {
+                        new BukkitRunnable(){
                             @Override
                             public void run() {
-                                ResultSet rs = SQLiteManager.get().findUnionMember(strings[1], commandSender);
+                                ResultSet rs = SQLiteManager.get().findUnionMember(strings[1]);
                                 try {
                                     if (rs.next()) {
                                         String union = rs.getString("union");
-                                        ResultSet rs2 = SQLiteManager.get().findUnionMember(union, commandSender);
+                                        ResultSet rs2 = SQLiteManager.get().findUnionMember(union);
                                         player.sendMessage("§e" + union + "§f公会信息如下:");
                                         ArrayList<String> members = new ArrayList<String>();
                                         ArrayList<Integer> duties = new ArrayList<Integer>();
