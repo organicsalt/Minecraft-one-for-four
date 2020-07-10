@@ -1,6 +1,8 @@
 package com.organicsalt.minecraft.commands;
 
+import com.organicsalt.minecraft.GUI.SignGUI;
 import com.organicsalt.minecraft.GUI.storeInventory;
+import lk.vexview.api.VexViewAPI;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -12,6 +14,7 @@ public class sign_in implements CommandExecutor{
     public boolean onCommand(CommandSender commandSender, Command command, String s, String[] strings) {
         if(commandSender instanceof Player){
             if (s.equalsIgnoreCase("sign_in")){
+                Player player = (Player) commandSender;
                 //连接数据库查询已经签到的日子
                 //sql="select "+strings[0]+" from role_sign where UUID = '" + id + "'"; 查询签到的日子date
                 if(true){//如果能够签到

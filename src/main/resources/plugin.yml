@@ -7,6 +7,11 @@ depend:
   - PlayerPoints
   - VexView
 commands:
+  sign:
+    description: "这个命令打开签到系统界面"
+    usage: "使用方法:/sign"
+    permission: "MyPlugin.sign"
+    permission-message: "你没权限"
   sign_in:
     description: "这个命令进行签到操作"
     usage: "使用方法:/sign_in"
@@ -52,3 +57,98 @@ commands:
     usage: "使用方法:/union [create|leave|join|dismiss|info|list] [union]|[upgrade|demote|kick|accept|deny|trans] [player]|[announce] [words]|"
     permission: "MyPlugin.union"
     permission-message: "你没权限"
+permissions:
+  union.*:
+    description: "公会系统权限集合"
+    children:
+      union.create: true
+      union.leave: true
+      union.join: true
+      union.dismiss: true
+      union.info: true
+      union.list: true
+      union.upgrade: true
+      union.demote: true
+      union.kick: true
+      union.accept: true
+      union.deny: true
+      union.trans: true
+      union.announce: true
+  union.create:
+    description:  "普通玩家有这个权限创建公会"
+    default: true
+  union.leave:
+    description:  "已加入公会的玩家有这个权限离开公会"
+    default: true
+  union.join:
+    description:  "未加入公会的玩家有这个权限加入公会"
+    default: true
+  union.dismiss:
+    description:  "担任公会会长的玩家有这个权限解散公会"
+    default: true
+  union.info:
+    description:  "普通玩家有这个权限查看公会信息"
+    default: true
+  union.list:
+    description:  "普通玩家有这个权限查看公会成员"
+    default: true
+  union.upgrade:
+    description:  "公会管理者有这个权限晋升公会成员"
+    default: true
+  union.demote:
+    description:  "公会管理者有这个权限降职公会成员"
+    default: true
+  union.kick:
+    description:  "公会管理者有这个权限踢出公会成员"
+    default: true
+  union.accept:
+    description:  "公会管理者有这个权限同意玩家加入公会的申请"
+    default: true
+  union.deny:
+    description:  "公会管理者有这个权限拒绝玩家加入公会的申请"
+    default: true
+  union.trans:
+    description:  "公会会长有这个权限转让公会给公会成员"
+    default: true
+  union.announce:
+    description:  "公会会长/副会长有这个权限发布公会公告"
+    default: true
+  sign:
+    description: "签到系统权限"
+    default: true
+  sign_in:
+    description: "签到权限"
+    default: true
+  complement_sign:
+    description: "补签权限"
+    default: true
+  query_sign:
+    description: "查询签到权限"
+    default: true
+  weapon_effects.*:
+    description: "武器特效系统权限集合"
+    children:
+      weapon_effects.on: true
+      weapon_effects.off: true
+      weapon_effects.up: true
+  weapon_effects.on:
+    description:  "普通玩家有这个权限开启武器特效"
+    default: true
+  weapon_effects.off:
+    description:  "普通玩家有这个权限关闭武器特效"
+    default: true
+  weapon_effects.up:
+    description:  "普通玩家有这个权限赋予武器特效"
+    default: true
+  invest:
+    description: "充值权限"
+    default: true
+  buy:
+    description: "商店购物权限"
+    default: true
+  vip:
+    description: "VIP系统权限"
+    default: true
+  weapon_upgrade:
+    description: "武器强化权限"
+    default: true

@@ -5,6 +5,7 @@ import com.organicsalt.minecraft.dao.SQLiteManager;
 import com.organicsalt.minecraft.event.EntityEvent;
 import com.organicsalt.minecraft.event.InventoryGUIEvent;
 import com.organicsalt.minecraft.event.PlayerEvent;
+import com.organicsalt.minecraft.event.VexGuiEvent;
 import com.organicsalt.minecraft.util.PlayerPointsUtil;
 import com.organicsalt.minecraft.util.VaultUtil;
 import org.bukkit.Bukkit;
@@ -55,6 +56,8 @@ public class main extends JavaPlugin{
         Bukkit.getPluginManager().registerEvents(new PlayerEvent(),this);
         Bukkit.getPluginManager().registerEvents(new EntityEvent(),this);
         Bukkit.getPluginManager().registerEvents(new InventoryGUIEvent(),this);
+        Bukkit.getPluginManager().registerEvents(new VexGuiEvent(),this);
+        this.getCommand("sign").setExecutor(new sign());
         this.getCommand("sign_in").setExecutor(new sign_in());
         this.getCommand("complement_sign").setExecutor(new complement_sign());
         this.getCommand("query_sign").setExecutor(new query_sign());

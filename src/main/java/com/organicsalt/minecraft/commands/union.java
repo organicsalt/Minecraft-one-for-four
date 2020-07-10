@@ -1,7 +1,9 @@
 package com.organicsalt.minecraft.commands;
 
+import com.organicsalt.minecraft.GUI.UnionListGUI;
 import com.organicsalt.minecraft.dao.SQLiteManager;
 import com.organicsalt.minecraft.main;
+import lk.vexview.api.VexViewAPI;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -22,7 +24,10 @@ public class union implements CommandExecutor {
             if (s.equalsIgnoreCase("union")){
                 Player player = (Player)commandSender;
                 UUID id = player.getUniqueId();
-                if(strings.length==2){
+                if(strings.length==0){
+                    VexViewAPI.openGui(player,UnionListGUI.UnionListGUI(player));
+                }
+                else if(strings.length==2){
                     if(strings[0].equalsIgnoreCase("create")){
                         new BukkitRunnable(){
                             @Override
@@ -508,19 +513,19 @@ public class union implements CommandExecutor {
                                         for (int i = 0; i < members.size(); i++) {
                                             switch (duties.get(i)) {
                                                 case 0:
-                                                    player.sendMessage("申请中:" + "§e" + members.get(i));
+                                                    player.sendMessage("§2申请中:" + "§f" + members.get(i));
                                                     break;
                                                 case 1:
-                                                    player.sendMessage("成员:" + members.get(i));
+                                                    player.sendMessage("§1成员:" + "§f" + members.get(i));
                                                     break;
                                                 case 2:
-                                                    player.sendMessage("组长:" + members.get(i));
+                                                    player.sendMessage("§e组长:" + "§f"  + members.get(i));
                                                     break;
                                                 case 3:
-                                                    player.sendMessage("副会长:" + members.get(i));
+                                                    player.sendMessage("§4副会长:" + "§f" + members.get(i));
                                                     break;
                                                 case 4:
-                                                    player.sendMessage("会长:" + members.get(i));
+                                                    player.sendMessage("§5会长:" + "§f" + members.get(i));
                                                     break;
                                                 default:
                                                     break;
