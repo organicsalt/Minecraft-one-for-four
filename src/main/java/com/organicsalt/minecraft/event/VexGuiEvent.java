@@ -174,6 +174,532 @@ public class VexGuiEvent implements Listener {
                 }
             }.runTaskAsynchronously(main.plugin);
         }
+        else if(buttonID==2){
+            new BukkitRunnable(){
+                @Override
+                public void run() {
+                    Player player=event.getPlayer();
+                    String union=event.getGui().getTextField(1).getTypedText();
+                    ResultSet rs = SQLiteManager.get().findUnionData(union);
+                    try {
+                        if(rs.next()){
+                            player.sendMessage("该公会名重复！");
+                        }
+                        else{
+                            rs = SQLiteManager.get().findUnionDutyData(player.getName());
+                            if(rs.next()){
+                                player.sendMessage("该玩家已有公会！");
+                            }
+                            else {
+                                double x = player.getLocation().getX();
+                                double y = player.getLocation().getY();
+                                double z = player.getLocation().getZ();
+                                SQLiteManager.get().insertData(union, null, player.getName(), x, y, z);
+                                SQLiteManager.get().insertData(player.getName(),union,4);
+                                player.sendMessage("创建公会成功!");
+                            }
+                        }
+                    } catch (SQLException e) {
+                        e.printStackTrace();
+                    }
+                }
+            }.runTaskAsynchronously(main.plugin);
+        }
+        else if(buttonID==3){
+            new BukkitRunnable(){
+                @Override
+                public void run() {
+                    Player player=event.getPlayer();
+                    String union2=event.getGui().getTextField(1).getTypedText();
+                    ResultSet rs = SQLiteManager.get().findUnionDutyData(player.getName());
+                    try {
+                        if(rs.next()){
+                            String union = rs.getString("union");
+                            int duty = rs.getInt("duty");
+                            if(union.equals(union2)){
+                                if(duty!=4){
+                                    SQLiteManager.get().deleteUnionData(player.getName(),1);
+                                    player.sendMessage("§e"+player.getName()+"退出"+"§9"+union2+"§f公会成功！");
+                                }
+                                else{
+                                    player.sendMessage("会长无法退出公会！");
+                                }
+                            }
+                            else{
+                                player.sendMessage("你不属于这个公会!");
+                            }
+                        }
+                        else{
+                            player.sendMessage("你没有公会!");
+                        }
+                    } catch (SQLException e) {
+                        e.printStackTrace();
+                    }
+                }
+            }.runTaskAsynchronously(main.plugin);
+        }
+        else if(buttonID==4){
+            new BukkitRunnable(){
+                @Override
+                public void run() {
+                    Player player=event.getPlayer();
+                    String union2=event.getGui().getTextField(1).getTypedText();
+                    ResultSet rs = SQLiteManager.get().findUnionDutyData(player.getName());
+                    try {
+                        if(rs.next()){
+                            String union = rs.getString("union");
+                            int duty = rs.getInt("duty");
+                            if(union.equals(union2)&&duty>=1){
+                                player.sendMessage("你已经属于这个公会!");
+                            }
+                            else if(union.equals(union2)&&duty==0){
+                                player.sendMessage("你已经申请了该公会！");
+                            }
+                            else if(duty==0){
+                                player.sendMessage("你已经申请了其他公会！");
+                            }
+                            else if(duty>=1){
+                                player.sendMessage("你已经有了公会！");
+                            }
+                        }
+                        else{
+                            SQLiteManager.get().insertData(player.getName(), union2,0);
+                            player.sendMessage("申请加入"+"§e"+union2+"§f公会成功!");
+                        }
+                    } catch (SQLException e) {
+                        e.printStackTrace();
+                    }
+                }
+            }.runTaskAsynchronously(main.plugin);
+        }
+        else if(buttonID==5){
+            new BukkitRunnable(){
+                @Override
+                public void run() {
+                    Player player=event.getPlayer();
+                    String union2=event.getGui().getTextField(1).getTypedText();
+                    ResultSet rs = SQLiteManager.get().findUnionDutyData(player.getName());
+                    try {
+                        if(rs.next()){
+                            String union = rs.getString("union");
+                            int duty = rs.getInt("duty");
+                            if(union.equals(union2)){
+                                if(duty!=4){
+                                    player.sendMessage("你没有足够的权限！");
+                                }
+                                else{
+                                    ArrayList<String> members=new ArrayList<String>();
+                                    rs = SQLiteManager.get().findUnionMember(union2);
+                                    while(rs.next()){
+                                        members.add(rs.getString("name"));
+                                    }
+                                    for(String name:members){
+                                        SQLiteManager.get().deleteUnionData(name,1);
+                                    }
+                                    SQLiteManager.get().deleteUnionData(union2,0);
+                                    player.sendMessage("公会已解散！");
+                                }
+                            }
+                            else{
+                                player.sendMessage("你不属于这个公会!");
+                            }
+                        }
+                        else{
+                            player.sendMessage("你没有公会!");
+                        }
+                    } catch (SQLException e) {
+                        e.printStackTrace();
+                    }
+                }
+            }.runTaskAsynchronously(main.plugin);
+        }
+        else if(buttonID==6){
+            new BukkitRunnable(){
+                @Override
+                public void run() {
+                    Player player=event.getPlayer();
+                    String union=event.getGui().getTextField(1).getTypedText();
+                    ResultSet rs = SQLiteManager.get().findUnionData(union);
+                    try {
+                        if(rs.next()){
+                            String announce = rs.getString("announcement");
+                            String name = rs.getString("name");
+                            double x = rs.getDouble("x");
+                            double y = rs.getDouble("y");
+                            double z = rs.getDouble("z");
+                            player.sendMessage(union+"公会信息如下:");
+                            player.sendMessage("会长-"+name);
+                            player.sendMessage("公会公告-"+announce);
+                            player.sendMessage("公会据点坐标-");
+                            player.sendMessage("x-"+x);
+                            player.sendMessage("y-"+y);
+                            player.sendMessage("z-"+z);
+                        }
+                        else{
+                            player.sendMessage("该名字的公会不存在!");
+                        }
+                    } catch (SQLException e) {
+                        e.printStackTrace();
+                    }
+                }
+            }.runTaskAsynchronously(main.plugin);
+        }
+        else if(buttonID==7){
+            new BukkitRunnable(){
+                @Override
+                public void run() {
+                    Player player=event.getPlayer();
+                    String union2=event.getGui().getTextField(1).getTypedText();
+                    ResultSet rs = SQLiteManager.get().findUnionMember(union2);
+                    try {
+                        if (rs.next()) {
+                            String union = rs.getString("union");
+                            ResultSet rs2 = SQLiteManager.get().findUnionMember(union);
+                            player.sendMessage("§e" + union + "§f公会信息如下:");
+                            ArrayList<String> members = new ArrayList<String>();
+                            ArrayList<Integer> duties = new ArrayList<Integer>();
+                            while (rs2.next()) {
+                                members.add(rs2.getString("name"));
+                                duties.add(rs2.getInt("duty"));
+                            }
+                            for (int i = 0; i < members.size(); i++) {
+                                for (int j = i; j < members.size(); j++) {
+                                    if (duties.get(i) < duties.get(j)) {
+                                        int duty = duties.get(j);
+                                        String member = members.get(j);
+                                        duties.set(j, duties.get(i));
+                                        duties.set(i, duty);
+                                        members.set(j, members.get(i));
+                                        members.set(i, member);
+                                    }
+                                }
+                            }
+                            for (int i = 0; i < members.size(); i++) {
+                                switch (duties.get(i)) {
+                                    case 0:
+                                        player.sendMessage("§2申请中:" + "§f" + members.get(i));
+                                        break;
+                                    case 1:
+                                        player.sendMessage("§1成员:" + "§f" + members.get(i));
+                                        break;
+                                    case 2:
+                                        player.sendMessage("§e组长:" + "§f"  + members.get(i));
+                                        break;
+                                    case 3:
+                                        player.sendMessage("§4副会长:" + "§f" + members.get(i));
+                                        break;
+                                    case 4:
+                                        player.sendMessage("§5会长:" + "§f" + members.get(i));
+                                        break;
+                                    default:
+                                        break;
+                                }
+                            }
+                        } else{
+                            player.sendMessage("该公会名称不存在！");
+                        }
+                    } catch (SQLException e) {
+                        e.printStackTrace();
+                    }
+                }
+            }.runTaskAsynchronously(main.plugin);
+        }
+        else if(buttonID==8){
+            new BukkitRunnable(){
+                @Override
+                public void run() {
+                    Player player=event.getPlayer();
+                    String name=event.getGui().getTextField(1).getTypedText();
+                    ResultSet rs = SQLiteManager.get().findUnionDutyData(name);
+                    ResultSet rs2 = SQLiteManager.get().findUnionDutyData(player.getName());
+                    try {
+                        if(rs.next()){
+                            if(rs2.next()){
+                                String union1 = rs.getString("union");
+                                String union2 = rs2.getString("union");
+                                int duty1 = rs.getInt("duty");
+                                int duty2 = rs2.getInt("duty");
+                                if(union1.equals(union2)){
+                                    if(duty2-duty1>1){
+                                        duty1=duty1+1;
+                                        SQLiteManager.get().updateUnionDuty(name, duty1);
+                                        player.sendMessage("§e"+name+"§f已晋升");
+                                    }
+                                    else{
+                                        player.sendMessage("你没有足够的权限！");
+                                    }
+                                }
+                                else{
+                                    player.sendMessage("§e"+name+"§f不是你公会的成员！");
+                                }
+                            }
+                            else{
+                                player.sendMessage("你没有公会！");
+                            }
+                        }
+                        else{
+                            player.sendMessage("§e"+name+"§f没有公会！");
+                        }
+                    } catch (SQLException e) {
+                        e.printStackTrace();
+                    }
+                }
+            }.runTaskAsynchronously(main.plugin);
+        }
+        else if(buttonID==9){
+            new BukkitRunnable(){
+                @Override
+                public void run() {
+                    Player player=event.getPlayer();
+                    String name=event.getGui().getTextField(1).getTypedText();
+                    ResultSet rs = SQLiteManager.get().findUnionDutyData(name);
+                    ResultSet rs2 = SQLiteManager.get().findUnionDutyData(player.getName());
+                    try {
+                        if(rs.next()){
+                            if(rs2.next()){
+                                String union1 = rs.getString("union");
+                                String union2 = rs2.getString("union");
+                                int duty1 = rs.getInt("duty");
+                                int duty2 = rs2.getInt("duty");
+                                if(union1.equals(union2)){
+                                    if(duty2-duty1>=1&&duty1>1){
+                                        duty1=duty1-1;
+                                        SQLiteManager.get().updateUnionDuty(name, duty1);
+                                        player.sendMessage("§e"+name+"§f已降职");
+                                    }
+                                    else if(duty2-duty1<=1){
+                                        player.sendMessage("你没有足够的权限！");
+                                    }
+                                    else{
+                                        player.sendMessage("§e"+name+"§f无法被降职！");
+                                    }
+                                }
+                                else{
+                                    player.sendMessage("§e"+name+"§f不是你公会的成员！");
+                                }
+                            }
+                            else{
+                                player.sendMessage("你没有公会！");
+                            }
+                        }
+                        else{
+                            player.sendMessage("§e"+name+"§f没有公会！");
+                        }
+                    } catch (SQLException e) {
+                        e.printStackTrace();
+                    }
+                }
+            }.runTaskAsynchronously(main.plugin);
+        }
+        else if(buttonID==10){
+            new BukkitRunnable(){
+                @Override
+                public void run() {
+                    Player player=event.getPlayer();
+                    String name=event.getGui().getTextField(1).getTypedText();
+                    ResultSet rs = SQLiteManager.get().findUnionDutyData(name);
+                    ResultSet rs2 = SQLiteManager.get().findUnionDutyData(player.getName());
+                    try {
+                        if(rs.next()){
+                            if(rs2.next()){
+                                String union1 = rs.getString("union");
+                                String union2 = rs2.getString("union");
+                                int duty1 = rs.getInt("duty");
+                                int duty2 = rs2.getInt("duty");
+                                if(union1.equals(union2)){
+                                    if(duty2-duty1>1&&duty1>=1){
+                                        SQLiteManager.get().deleteUnionData(name, 1);
+                                        player.sendMessage("§e"+name+"§f已踢出");
+                                    }
+                                    else if(duty2-duty1<=1){
+                                        player.sendMessage("你没有足够的权限！");
+                                    }
+                                    else{
+                                        player.sendMessage("§e"+name+"§f无法被踢出！");
+                                    }
+                                }
+                                else{
+                                    player.sendMessage("§e"+name+"§f不是你公会的成员！");
+                                }
+                            }
+                            else{
+                                player.sendMessage("你没有公会！");
+                            }
+                        }
+                        else{
+                            player.sendMessage("§e"+name+"§f没有公会！");
+                        }
+                    } catch (SQLException e) {
+                        e.printStackTrace();
+                    }
+                }
+            }.runTaskAsynchronously(main.plugin);
+        }
+        else if(buttonID==11){
+            new BukkitRunnable(){
+                @Override
+                public void run() {
+                    Player player=event.getPlayer();
+                    String name=event.getGui().getTextField(1).getTypedText();
+                    ResultSet rs = SQLiteManager.get().findUnionDutyData(name);
+                    ResultSet rs2 = SQLiteManager.get().findUnionDutyData(player.getName());
+                    try {
+                        if(rs.next()){
+                            if(rs2.next()){
+                                String union1 = rs.getString("union");
+                                String union2 = rs2.getString("union");
+                                int duty1 = rs.getInt("duty");
+                                int duty2 = rs2.getInt("duty");
+                                if(union1.equals(union2)){
+                                    if(duty2>1&&duty1==0){
+                                        duty1=1;
+                                        SQLiteManager.get().updateUnionDuty(name, duty1);
+                                        player.sendMessage("§e"+name+"§f申请已通过！");
+                                    }
+                                    else if(duty2<=1){
+                                        player.sendMessage("你没有足够的权限！");
+                                    }
+                                    else{
+                                        player.sendMessage("§e"+name+"§f已经是公会成员！");
+                                    }
+                                }
+                                else{
+                                    player.sendMessage("§e"+name+"§f不是你公会的成员！");
+                                }
+                            }
+                            else{
+                                player.sendMessage("你没有公会！");
+                            }
+                        }
+                        else{
+                            player.sendMessage("§e"+name+"§f没有公会！");
+                        }
+                    } catch (SQLException e) {
+                        e.printStackTrace();
+                    }
+                }
+            }.runTaskAsynchronously(main.plugin);
+        }
+        else if(buttonID==12){
+            new BukkitRunnable(){
+                @Override
+                public void run() {
+                    Player player=event.getPlayer();
+                    String name=event.getGui().getTextField(1).getTypedText();
+                    ResultSet rs = SQLiteManager.get().findUnionDutyData(name);
+                    ResultSet rs2 = SQLiteManager.get().findUnionDutyData(player.getName());
+                    try {
+                        if(rs.next()){
+                            if(rs2.next()){
+                                String union1 = rs.getString("union");
+                                String union2 = rs2.getString("union");
+                                int duty1 = rs.getInt("duty");
+                                int duty2 = rs2.getInt("duty");
+                                if(union1.equals(union2)){
+                                    if(duty2>1&&duty1==0){
+                                        SQLiteManager.get().deleteUnionData(name, 1);
+                                        player.sendMessage("§e"+name+"§f申请已拒绝！");
+                                    }
+                                    else if(duty2<=1){
+                                        player.sendMessage("你没有足够的权限！");
+                                    }
+                                    else{
+                                        player.sendMessage("§e"+name+"§f已经是公会成员！");
+                                    }
+                                }
+                                else{
+                                    player.sendMessage("§e"+name+"§f不是你公会的成员！");
+                                }
+                            }
+                            else{
+                                player.sendMessage("你没有公会！");
+                            }
+                        }
+                        else{
+                            player.sendMessage("§e"+name+"§f没有公会！");
+                        }
+                    } catch (SQLException e) {
+                        e.printStackTrace();
+                    }
+                }
+            }.runTaskAsynchronously(main.plugin);
+        }
+        else if(buttonID==13){
+            new BukkitRunnable(){
+                @Override
+                public void run() {
+                    Player player=event.getPlayer();
+                    String name=event.getGui().getTextField(1).getTypedText();
+                    ResultSet rs = SQLiteManager.get().findUnionDutyData(name);
+                    ResultSet rs2 = SQLiteManager.get().findUnionDutyData(player.getName());
+                    try {
+                        if(rs.next()){
+                            if(rs2.next()){
+                                String union1 = rs.getString("union");
+                                String union2 = rs2.getString("union");
+                                int duty1 = rs.getInt("duty");
+                                int duty2 = rs2.getInt("duty");
+                                if(union1.equals(union2)){
+                                    if(duty2==4&&duty1>=1){
+                                        duty1=4;
+                                        duty2=1;
+                                        SQLiteManager.get().updateUnionDuty(name, duty1);
+                                        SQLiteManager.get().updateUnionDuty(player.getName(), duty2);
+                                        SQLiteManager.get().updateUnionInfoMaster(name, union1);
+                                        player.sendMessage("公会已转让给§e"+name);
+                                    }
+                                    else if(duty1==0){
+                                        player.sendMessage("§e"+name+"§f不是你公会的成员！");
+                                    }
+                                    else{
+                                        player.sendMessage("你没有足够的权限！");
+                                    }
+                                }
+                                else{
+                                    player.sendMessage("§e"+name+"§f不是你公会的成员！");
+                                }
+                            }
+                            else{
+                                player.sendMessage("§e"+name+"§f不是你公会的成员！");
+                            }
+                        }
+                        else{
+                            player.sendMessage("你没有公会！");
+                        }
+                    } catch (SQLException e) {
+                        e.printStackTrace();
+                    }
+                }
+            }.runTaskAsynchronously(main.plugin);
+        }
+        else if(buttonID==14){
+            new BukkitRunnable(){
+                @Override
+                public void run() {
+                    Player player=event.getPlayer();
+                    String announce=event.getGui().getTextField(1).getTypedText();
+                    ResultSet rs = SQLiteManager.get().findUnionDutyData(player.getName());
+                    try {
+                        if(rs.next()){
+                            String union = rs.getString("union");
+                            int duty = rs.getInt("duty");
+                            if(duty>2){
+                                SQLiteManager.get().updateUnionInfoAnnouncement(announce, union);
+                                player.sendMessage("公会公告已发布！");
+                            }
+                            else{
+                                player.sendMessage("你没有足够的权限！");
+                            }
+                        }
+                        else{
+                            player.sendMessage("你没有公会！");
+                        }
+                    } catch (SQLException e) {
+                        e.printStackTrace();
+                    }
+                }
+            }.runTaskAsynchronously(main.plugin);
+        }
         else{
             //event.getPlayer().sendMessage("buttonid:"+buttonID);
         }

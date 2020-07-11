@@ -1,6 +1,6 @@
 package com.organicsalt.minecraft.commands;
 
-import com.organicsalt.minecraft.GUI.UnionListGUI;
+import com.organicsalt.minecraft.GUI.UnionGUI;
 import com.organicsalt.minecraft.dao.SQLiteManager;
 import com.organicsalt.minecraft.main;
 import lk.vexview.api.VexViewAPI;
@@ -13,7 +13,6 @@ import org.bukkit.scheduler.BukkitRunnable;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
-import java.util.List;
 import java.util.UUID;
 
 public class union implements CommandExecutor {
@@ -25,7 +24,7 @@ public class union implements CommandExecutor {
                 Player player = (Player)commandSender;
                 UUID id = player.getUniqueId();
                 if(strings.length==0){
-                    VexViewAPI.openGui(player,UnionListGUI.UnionListGUI(player));
+                    VexViewAPI.openGui(player, UnionGUI.UnionListGUI(player));
                 }
                 else if(strings.length==2){
                     if(strings[0].equalsIgnoreCase("create")){
