@@ -3,8 +3,10 @@ package com.organicsalt.minecraft.event;
 import com.organicsalt.minecraft.GUI.effectInventory;
 import com.organicsalt.minecraft.GUI.storeInventory;
 import com.organicsalt.minecraft.GUI.upgradeInventory;
+import com.organicsalt.minecraft.dao.SQLiteManager;
 import com.organicsalt.minecraft.main;
 import com.organicsalt.minecraft.util.PlayerPointsUtil;
+import com.organicsalt.minecraft.util.SaveItemStack;
 import org.black_ixx.playerpoints.PlayerPoints;
 import org.bukkit.Material;
 import org.bukkit.entity.HumanEntity;
@@ -16,7 +18,10 @@ import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
+import org.bukkit.scheduler.BukkitRunnable;
 
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.Arrays;
 
 public class InventoryGUIEvent implements Listener {
@@ -234,38 +239,74 @@ public class InventoryGUIEvent implements Listener {
             HumanEntity whoClicked=event.getWhoClicked();
             Player player=(Player)whoClicked;
             int rawslot=event.getRawSlot();
-            //main.plugin.getLogger().info((String.valueOf(rawslot)));
             if(rawslot>=0&&rawslot<=53&&rawslot!=22) {
                 event.setCancelled(true);
                 if(rawslot==47) {
-                    //链接数据库查询背包中强化石的数量
-                    //sql="select amount from itemInBag where UUID='" + id + "' and item='upgrade_stone'";  //查询玩家现有强化石个数upgrade_stone
-                    //sql="select level from weapon_upgrade where UUID='" + id + "' and weapon='" + strings[1] + "'"; //查询需要强化的武器等级level 记得要设置displayname
-                    if(true) {//22格里面有武器
-                        if (true) {//如果强化石的数量足够
-                            //如果武器没有强化等级
-                            //sql="insert into weapon_upgrade values('" + strings[1] + "', 0, '"+ id + "')";
-                            //随机函数判断是否强化成功
-                            //对应数量的强化石销毁
-                            //upgrade_stone=upgrade_stone-level*2;
-                            //sql="update itemInBag set amount = "+upgrade_stone+" where UUID='" + id + " and item='upgrade_stone'";
-                            if (true) {//如果强化成功
-                                //强化成功武器等级+1
-                                //level=level+1;
-                                //sql="update weapon_upgrade set level = "+ level +" where UUID='" + id + " and weapon='" + strings[1] + "'";
-                                player.sendMessage("强化成功！");
-                                //如果是+7以上强化成功将在工会内部广播
-                            } else {
-                                player.sendMessage("强化失败！");
-                                //强化失败武器等级不变
+                    new BukkitRunnable(){
+                        @Override
+                        public void run() {
+                            if (inventory.getItem(22) != null) {
+                                Inventory playerInventory = player.getInventory();
+                                int count = 0;
+                                int level = 0, effect = 0;
+                                for (ItemStack item : playerInventory.getStorageContents()) {
+                                    if (item != null) {
+                                        if (item.hasItemMeta()) {
+                                            if (item.getItemMeta().getDisplayName().equals("§e这是强化石")) {
+                                                count = count + item.getAmount();
+                                            }
+                                        }
+                                    }
+                                }
+                                String data = SaveItemStack.ToData(inventory.getItem(22));
+                                ResultSet rs = SQLiteManager.get().findWeaponData(data);
+                                try {
+                                    if (!rs.next()) {
+                                        SQLiteManager.get().insertData(data, 0, 0);
+                                    } else {
+                                        level = rs.getInt("level");
+                                        effect = rs.getInt("effect");
+                                    }
+                                    if(level<count) {
+                                        int max = 100, min = 1;
+                                        int ran = (int) (Math.random() * (max - min) + min);
+                                        ItemStack itemStack = new ItemStack(Material.DIAMOND);
+                                        ItemMeta itemMeta = itemStack.getItemMeta();
+                                        itemMeta.setDisplayName("§e这是强化石");
+                                        itemMeta.setLore(Arrays.asList("§b该石头可以用来强化武器", "§6输入/weapon_upgrade 命令进行强化", "§4强化有可能失败", "§2武器强化等级越高强化成功率越低"));
+                                        itemStack.setItemMeta(itemMeta);
+                                        itemStack.setAmount(level + 1);
+                                        playerInventory.removeItem(itemStack);
+                                        player.getWorld().strikeLightningEffect(player.getLocation());
+                                        if (ran > level * 5) {
+                                            level = level + 1;
+                                            ItemStack itemStackWeapon = inventory.getItem(22);
+                                            ItemMeta itemMetaWeapon = itemStackWeapon.getItemMeta();
+                                            itemMetaWeapon.setDisplayName("武器强化+§4" + level);
+                                            itemMetaWeapon.setLore(Arrays.asList("§b该武器伤害+§6" + level * 2));
+                                            itemStackWeapon.setItemMeta(itemMetaWeapon);
+                                            itemStackWeapon.setAmount(1);
+                                            inventory.remove(inventory.getItem(22));
+                                            inventory.addItem(itemStackWeapon);
+                                            String dataweapon = SaveItemStack.ToData(itemStackWeapon);
+                                            SQLiteManager.get().updateWeapon(dataweapon, level, effect, data);
+                                            player.sendMessage("强化成功！");
+                                        } else {
+                                            player.sendMessage("强化失败！");
+                                        }
+                                    }
+                                    else{
+                                        player.sendMessage("强化石数量不足！");
+                                    }
+                                } catch (SQLException e) {
+                                    e.printStackTrace();
+                                }
                             }
-                        } else {
-                            player.sendMessage("强化石数量不足！");
+                            else{
+                                player.sendMessage("武器未放入！");
+                            }
                         }
-                    }
-                    else{
-                        player.sendMessage("武器不存在！");
-                    }
+                    }.runTaskAsynchronously(main.plugin);
                 }
                 else if(rawslot==51){
                     player.sendMessage("退出强化");

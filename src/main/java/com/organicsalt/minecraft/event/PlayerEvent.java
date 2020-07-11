@@ -136,16 +136,25 @@ public class PlayerEvent implements Listener {
     public void onPlayerInteractBlock(PlayerInteractEvent event) {
         if(AroundEffect.status==true){ //当前特效已开启
             Player player = event.getPlayer();
-            if (player.getItemInHand().getType() == Material.IRON_SWORD) {  //IRON_SWORD
-                player.getWorld().strikeLightningEffect(player.getTargetBlock(null,1).getLocation());
-            }
-            else if(player.getItemInHand().getType()==Material.WOOD_SWORD){
-                Location location=player.getTargetBlock(null,1).getLocation();
-                player.getWorld().createExplosion(location.getX(),location.getY(),location.getZ(),1.0f,true,false);
-            }
-            else if(player.getItemInHand().getType()==Material.DIAMOND_SWORD){
-                Location location=player.getTargetBlock(null,1).getLocation();
-                location.getWorld().playEffect(location, Effect.MOBSPAWNER_FLAMES, 1);
+            String weapon = SaveItemStack.ToData(player.getEquipment().getItemInHand());
+            ResultSet rs = SQLiteManager.get().findWeaponData(weapon);
+            try {
+                if(rs.next()){
+                    int level = rs.getInt("level");
+                    if(level>=15){
+                        Location location=player.getTargetBlock(null,1).getLocation();
+                        player.getWorld().createExplosion(location.getX(),location.getY(),location.getZ(),1.0f,true,false);
+                    }
+                    else if(level>=10){
+                        player.getWorld().strikeLightningEffect(player.getTargetBlock(null,1).getLocation());
+                    }
+                    else if(level>=5){
+                        Location location=player.getTargetBlock(null,1).getLocation();
+                        location.getWorld().playEffect(location, Effect.MOBSPAWNER_FLAMES, 1);
+                    }
+                }
+            } catch (SQLException e) {
+                e.printStackTrace();
             }
         }
     }

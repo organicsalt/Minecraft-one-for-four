@@ -2,13 +2,20 @@ package com.organicsalt.minecraft.commands;
 
 import com.organicsalt.minecraft.GUI.effectInventory;
 import com.organicsalt.minecraft.GUI.storeInventory;
+import com.organicsalt.minecraft.dao.SQLiteManager;
 import com.organicsalt.minecraft.effects.AroundEffect;
+import com.organicsalt.minecraft.main;
+import com.organicsalt.minecraft.util.SaveItemStack;
 import org.bukkit.Effect;
 import org.bukkit.Material;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
+import org.bukkit.scheduler.BukkitRunnable;
+
+import java.sql.ResultSet;
+import java.sql.SQLException;
 
 public class weapon_effects implements CommandExecutor {
     @Override
@@ -19,18 +26,34 @@ public class weapon_effects implements CommandExecutor {
                     Player player = (Player) commandSender;
                     if (strings[0].equalsIgnoreCase("on")) {//如果是开启武器特效指令
                         if(AroundEffect.status==false){
-                            if (player.getItemInHand().getType() == Material.WOOD_SWORD) {
-                                AroundEffect aroundEffect = new AroundEffect(player, Effect.MOBSPAWNER_FLAMES);
-                                aroundEffect.startEffect();
-                            } else if (player.getItemInHand().getType() == Material.DIAMOND_SWORD) {
-                                AroundEffect aroundEffect = new AroundEffect(player, Effect.SMOKE);
-                                aroundEffect.startEffect();
-                            } else if (player.getItemInHand().getType() == Material.IRON_SWORD) {
-                                AroundEffect aroundEffect = new AroundEffect(player, Effect.ENDER_SIGNAL);
-                                aroundEffect.startEffect();
-                            }
-                            AroundEffect.status = true;
-                            commandSender.sendMessage("特效开启成功!");
+                            new BukkitRunnable() {
+                                @Override
+                                public void run() {
+                                    String weapon = SaveItemStack.ToData(player.getEquipment().getItemInHand());
+                                    ResultSet rs = SQLiteManager.get().findWeaponData(weapon);
+                                    try {
+                                        if (rs.next()) {
+                                            int effect = rs.getInt("effect");
+                                            if(effect==1){
+                                                AroundEffect aroundEffect = new AroundEffect(player, Effect.SMOKE);
+                                                aroundEffect.startEffect();
+                                            }
+                                            else if(effect==2){
+                                                AroundEffect aroundEffect = new AroundEffect(player, Effect.MOBSPAWNER_FLAMES);
+                                                aroundEffect.startEffect();
+                                            }
+                                            else if(effect==3){
+                                                AroundEffect aroundEffect = new AroundEffect(player, Effect.ENDER_SIGNAL);
+                                                aroundEffect.startEffect();
+                                            }
+                                        }
+                                    } catch (SQLException e) {
+                                        e.printStackTrace();
+                                    }
+                                    AroundEffect.status = true;
+                                    commandSender.sendMessage("特效开启成功!");
+                                }
+                            }.runTaskAsynchronously(main.plugin);
                         }
                         else{
                             commandSender.sendMessage("当前特效已开启，请先关闭特效!");
