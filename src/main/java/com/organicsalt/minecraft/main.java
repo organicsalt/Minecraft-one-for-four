@@ -60,7 +60,6 @@ public class main extends JavaPlugin{
         this.getCommand("sign").setExecutor(new sign());
         this.getCommand("sign_in").setExecutor(new sign_in());
         this.getCommand("complement_sign").setExecutor(new complement_sign());
-        this.getCommand("query_sign").setExecutor(new query_sign());
         this.getCommand("weapon_effects").setExecutor(new weapon_effects());
         this.getCommand("invest").setExecutor(new invest());
         this.getCommand("buy").setExecutor(new buy());

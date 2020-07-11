@@ -22,11 +22,6 @@ commands:
     usage: "使用方法:/complement_sign [date]"
     permission: "MyPlugin.complement_sign"
     permission-message: "你没权限"
-  query_sign:
-    description: "这个命令查询该月已签到日期"
-    usage: "使用方法:/query_sign"
-    permission: "MyPlugin.query_sign"
-    permission-message: "你没权限"
   weapon_effects:
     description: "这个命令进行指定武器特效打开/关闭/赋予操作"
     usage: "使用方法:/weapon_effects [on/off/up]"
@@ -121,9 +116,6 @@ permissions:
     default: true
   complement_sign:
     description: "补签权限"
-    default: true
-  query_sign:
-    description: "查询签到权限"
     default: true
   weapon_effects.*:
     description: "武器特效系统权限集合"
