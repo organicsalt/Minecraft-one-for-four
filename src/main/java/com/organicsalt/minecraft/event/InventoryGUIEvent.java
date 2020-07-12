@@ -207,24 +207,89 @@ public class InventoryGUIEvent implements Listener {
             if(rawslot>=0&&rawslot<=53&&rawslot!=22) {
                 event.setCancelled(true);
                 if(rawslot==47){
-                    //开启赋予武器特效界面
-                    //查看背包内是否有装扮石
-                    //sql="select status from weapon_effect where UUID='" + id + "' and weapon='" + strings[1] + "'"; //获取武器特效开启状况
-                    //sql="select amount from itemInBag where UUID='" + id + "' and item='effects_stone'";  //查询玩家现有强化石个数effects_stone
-                    if (true) {//如果能够开启特效，那么消耗一个装扮石
-                        player.sendMessage( "特效赋予成功!");
-                        //数据库中写入strings[1]的武器特效信息，背包中装扮石数量-1
-                        //产生随机特效random_effect
-                        //effects_stone=effects_stone-1;
-                        //sql="insert into weapon_effect values('" + strings[1] + "', '" + random_effect + "', '"+ id + "', 1)";
-                        //sql="update itemInBag set amount = "+effects_stone+" where UUID='" + id + " and item='effects_stone'";
-                    } else if (false) {//如果没有装扮石，那么输出装扮石余额不足
-                        player.sendMessage("装扮石余额不足!");
-                    } else if (false) {//如果不能赋予武器特效，那么输出该武器已经赋予特效
-                        player.sendMessage("你已经赋予特效!");
-                    } else {
-                        player.sendMessage("武器名称不存在！");
-                    }
+                    new BukkitRunnable(){
+                        @Override
+                        public void run() {
+                            if (inventory.getItem(22) != null) {
+                                Inventory playerInventory = player.getInventory();
+                                int count = 0;
+                                int level = 0, effect = 0;
+                                for (ItemStack item : playerInventory.getStorageContents()) {
+                                    if (item != null) {
+                                        if (item.hasItemMeta()) {
+                                            if (item.getItemMeta().getDisplayName().equals("§e这是装扮石")) {
+                                                count = count + item.getAmount();
+                                            }
+                                        }
+                                    }
+                                }
+                                String data = SaveItemStack.ToData(inventory.getItem(22));
+                                ResultSet rs = SQLiteManager.get().findWeaponData(data);
+                                try {
+                                    if (!rs.next()) {
+                                        SQLiteManager.get().insertData(data, level, effect);
+                                    } else {
+                                        level = rs.getInt("level");
+                                        effect = rs.getInt("effect");
+                                    }
+                                    if(effect==0) {
+                                        if (count>=1) {
+                                            int max = 100, min = 1;
+                                            int ran = (int) (Math.random() * (max - min) + min);
+                                            ItemStack itemStack = new ItemStack(Material.FLINT);
+                                            ItemMeta itemMeta = itemStack.getItemMeta();
+                                            itemMeta.setDisplayName("§e这是装扮石");
+                                            itemMeta.setLore(Arrays.asList("§b该石头可以用来开启武器特效", "§6输入/weapon_effects up命令进行开启", "§4用装扮石赋予武器特效只能覆盖无法叠加", "§2武器不同强化等级自身特效不一样"));
+                                            itemStack.setItemMeta(itemMeta);
+                                            itemStack.setAmount(1);
+                                            playerInventory.removeItem(itemStack);
+                                            player.getWorld().strikeLightningEffect(player.getLocation());
+                                            if (ran <= 33) {
+                                                effect = 1;
+                                            } else if (ran <= 66) {
+                                                effect = 2;
+                                            } else {
+                                                effect = 3;
+                                            }
+                                            ItemStack itemStackWeapon = inventory.getItem(22);
+                                            ItemMeta itemMetaWeapon = itemStackWeapon.getItemMeta();
+                                            if(level>0) {
+                                                itemMetaWeapon.setDisplayName("武器强化+§4" + level);
+                                            }
+                                            if (effect == 0) {
+                                                itemMetaWeapon.setLore(Arrays.asList("§b该武器伤害+§6" + level * 2));
+                                            }
+                                            if (effect == 1) {
+                                                itemMetaWeapon.setLore(Arrays.asList("§b该武器伤害+§6" + level * 2, "§6佩戴该武器人物附带烟雾效果"));
+                                            } else if (effect == 2) {
+                                                itemMetaWeapon.setLore(Arrays.asList("§b该武器伤害+§6" + level * 2, "§6佩戴该武器人物附带火花效果"));
+                                            } else if (effect == 3) {
+                                                itemMetaWeapon.setLore(Arrays.asList("§b该武器伤害+§6" + level * 2, "§6佩戴该武器人物附带末影颗粒"));
+                                            }
+                                            itemStackWeapon.setItemMeta(itemMetaWeapon);
+                                            itemStackWeapon.setAmount(1);
+                                            inventory.remove(inventory.getItem(22));
+                                            playerInventory.addItem(itemStackWeapon);
+                                            String dataweapon = SaveItemStack.ToData(itemStackWeapon);
+                                            SQLiteManager.get().updateWeapon(dataweapon, level, effect, data);
+                                            player.sendMessage("赋予装扮成功！");
+                                        }
+                                        else {
+                                            player.sendMessage("装扮石数量不足！");
+                                        }
+                                    }
+                                    else{
+                                        player.sendMessage("该物品已经拥有特效无法继续赋予！");
+                                    }
+                                } catch (SQLException e) {
+                                    e.printStackTrace();
+                                }
+                            }
+                            else{
+                                player.sendMessage("武器未放入！");
+                            }
+                        }
+                    }.runTaskAsynchronously(main.plugin);
                 }
                 else if(rawslot==51){
                     player.sendMessage("退出商城");
@@ -262,7 +327,7 @@ public class InventoryGUIEvent implements Listener {
                                 ResultSet rs = SQLiteManager.get().findWeaponData(data);
                                 try {
                                     if (!rs.next()) {
-                                        SQLiteManager.get().insertData(data, 0, 0);
+                                        SQLiteManager.get().insertData(data, level, effect);
                                     } else {
                                         level = rs.getInt("level");
                                         effect = rs.getInt("effect");
@@ -283,7 +348,18 @@ public class InventoryGUIEvent implements Listener {
                                             ItemStack itemStackWeapon = inventory.getItem(22);
                                             ItemMeta itemMetaWeapon = itemStackWeapon.getItemMeta();
                                             itemMetaWeapon.setDisplayName("武器强化+§4" + level);
-                                            itemMetaWeapon.setLore(Arrays.asList("§b该武器伤害+§6" + level * 2));
+                                            if(effect==0){
+                                                itemMetaWeapon.setLore(Arrays.asList("§b该武器伤害+§6" + level * 2));
+                                            }
+                                            if(effect==1) {
+                                                itemMetaWeapon.setLore(Arrays.asList("§b该武器伤害+§6" + level * 2,"§6佩戴该武器人物附带烟雾效果"));
+                                            }
+                                            else if(effect==2){
+                                                itemMetaWeapon.setLore(Arrays.asList("§b该武器伤害+§6" + level * 2,"§6佩戴该武器人物附带火花效果"));
+                                            }
+                                            else if(effect==3){
+                                                itemMetaWeapon.setLore(Arrays.asList("§b该武器伤害+§6" + level * 2,"§6佩戴该武器人物附带末影颗粒"));
+                                            }
                                             itemStackWeapon.setItemMeta(itemMetaWeapon);
                                             itemStackWeapon.setAmount(1);
                                             inventory.remove(inventory.getItem(22));

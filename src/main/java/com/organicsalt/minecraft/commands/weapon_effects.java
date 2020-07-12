@@ -61,7 +61,6 @@ public class weapon_effects implements CommandExecutor {
                         return true;
                     } else if (strings[0].equalsIgnoreCase("off")) {//如果是关闭武器特效指令
                         if(AroundEffect.status==true) {
-                            AroundEffect aroundEffect = new AroundEffect(player, null);
                             AroundEffect.status = false;
                             commandSender.sendMessage("特效关闭成功!");
                         }

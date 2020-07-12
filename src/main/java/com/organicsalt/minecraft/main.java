@@ -72,14 +72,8 @@ public class main extends JavaPlugin{
 
     @Override
     public void onDisable() {
-        new BukkitRunnable(){
-            @Override
-            public void run() {
-                //sql语句
-                SQLiteManager.get().shutdown();
-            }
-        }.runTaskAsynchronously(main.plugin);
-        System.out.println("插件结束！");
+        SQLiteManager.get().shutdown();
+        getLogger().info("插件结束！");
         super.onDisable();
     }
 }
