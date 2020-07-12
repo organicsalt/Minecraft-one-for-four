@@ -33,50 +33,45 @@ public class PlayerEvent implements Listener {
     public void PlayerJoin(PlayerJoinEvent event){
         main.plugin.getLogger().info("触发了加入服务器事件:"+event.getPlayer().getName());
         Player player=event.getPlayer();
-        new BukkitRunnable(){
-            @Override
-            public void run() {
-                ResultSet rs=SQLiteManager.get().findVIPData(player.getName());
-                try {
-                    if (!rs.next()) {
-                        int vip_point = 0;
-                        int vip_level = 0;
-                        int gift = 0;
-                        SQLiteManager.get().insertData(player.getName(), vip_level, vip_point, gift);
+        ResultSet rs=SQLiteManager.get().findVIPData(player.getName());
+        try {
+            if (!rs.next()) {
+                int vip_point = 0;
+                int vip_level = 0;
+                int gift = 0;
+                SQLiteManager.get().insertData(player.getName(), vip_level, vip_point, gift);
+            }
+            else{
+                int vip_point = rs.getInt("point");
+                int vip_level = rs.getInt("level");
+                int gift = rs.getInt("gift");
+                if(vip_level>1&&vip_level<=6){
+                    player.sendMessage("§4欢迎VIP进来:§e"+player.getName()+"");
+                }
+                else if(vip_level>6) {
+                    player.sendMessage("§4欢迎至尊VIP进来:§c【"+player.getName()+"】");
+                }
+                int[] gifts=new int[15];
+                int i=1;
+                boolean flag=false;
+                while(i<=vip_level){
+                    if((gift&1)==0){
+                        gifts[i]=1;
+                        flag=true;
                     }
-                    else{
-                        int vip_point = rs.getInt("point");
-                        int vip_level = rs.getInt("level");
-                        int gift = rs.getInt("gift");
-                        if(vip_level>1&&vip_level<=6){
-                            player.sendMessage("§4欢迎VIP进来:§e"+player.getName()+"");
-                        }
-                        else if(vip_level>6) {
-                            player.sendMessage("§4欢迎至尊VIP进来:§c【"+player.getName()+"】");
-                        }
-                        int[] gifts=new int[15];
-                        int i=vip_level;
-                        boolean flag=false;
-                        while(i>0){
-                            if((gift&1)==0){
-                                gifts[i]=1;
-                                flag=true;
-                            }
-                            gift=gift>>1;
-                            i=i-1;
-                        }
-                        if(flag){
-                            player.sendMessage("你有如下等级VIP礼包尚未领取，请输入/vip bonus [count]进行领取！");
-                            for(int j=1;j<=vip_level;j++){
-                                if(gifts[j]==1) player.sendMessage("§c"+j);
-                            }
-                        }
+                    gift=gift>>1;
+                    i=i+1;
+                }
+                if(flag){
+                    player.sendMessage("你有如下等级VIP礼包尚未领取，请输入/vip bonus [count]进行领取！");
+                    for(int j=1;j<=vip_level;j++){
+                        if(gifts[j]==1) player.sendMessage("§c"+j);
                     }
-                }catch(SQLException e){
-                    e.printStackTrace();
                 }
             }
-        }.runTaskAsynchronously(main.plugin);
+        }catch(SQLException e){
+            e.printStackTrace();
+        }
     }
 
     @EventHandler(priority = EventPriority.HIGH)

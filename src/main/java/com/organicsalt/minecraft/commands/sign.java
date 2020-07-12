@@ -14,12 +14,17 @@ public class sign implements CommandExecutor {
         if(commandSender instanceof Player){
             if (s.equalsIgnoreCase("sign")){
                 Player player = (Player) commandSender;
-                if(strings.length==0){
-                    VexViewAPI.openGui(player, SignGUI.SignGUI(player));
-                    return true;
+                if(player.hasPermission("sign")) {
+                    if (strings.length == 0) {
+                        VexViewAPI.openGui(player, SignGUI.SignGUI(player));
+                        return true;
+                    } else {//如果不能签到
+                        commandSender.sendMessage("参数过多!");
+                    }
                 }
-                else{//如果不能签到
-                    commandSender.sendMessage("参数过多!");
+                else{
+                    commandSender.sendMessage("你没有权限！");
+                    return true;
                 }
             }
         }

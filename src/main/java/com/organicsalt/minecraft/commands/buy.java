@@ -17,14 +17,19 @@ public class buy implements CommandExecutor {
     @Override
     public boolean onCommand(CommandSender commandSender, Command command, String s, String[] strings) {
         if(commandSender instanceof Player){
-            if (s.equalsIgnoreCase("buy")){
-                if(strings.length==0) {
-                    Player player = (Player) commandSender;
-                    storeInventory.storeGUI(player);
-                    return true;
+            Player player = (Player) commandSender;
+            if(player.hasPermission("buy")) {
+                if (s.equalsIgnoreCase("buy")) {
+                    if (strings.length == 0) {
+                        storeInventory.storeGUI(player);
+                        return true;
+                    } else {
+                        commandSender.sendMessage("参数过多或不足");
+                    }
                 }
                 else{
-                    commandSender.sendMessage("参数过多或不足");
+                    commandSender.sendMessage("你没有权限！");
+                    return true;
                 }
             }
         }

@@ -138,9 +138,21 @@ permissions:
   buy:
     description: "商店购物权限"
     default: true
-  vip:
-    description: "VIP系统权限"
+  vip.*:
+    description: "VIP充值系统权限集合"
+    children:
+      vip.bonus: true
+      vip.level: true
+      vip.grade: true
+  vip.bonus:
+    description:  "玩家有这个权限领取VIP奖励"
     default: true
+  vip.level:
+      description:  "玩家有这个权限查看VIP等级"
+      default: true
+  vip.grade:
+      description:  "玩家有这个权限查看VIP点数"
+      default: true
   weapon_upgrade:
     description: "武器强化权限"
     default: true

@@ -25,52 +25,64 @@ public class weapon_effects implements CommandExecutor {
                 if (strings.length == 1) {
                     Player player = (Player) commandSender;
                     if (strings[0].equalsIgnoreCase("on")) {//如果是开启武器特效指令
-                        if(AroundEffect.status==false){
-                            new BukkitRunnable() {
-                                @Override
-                                public void run() {
-                                    String weapon = SaveItemStack.ToData(player.getEquipment().getItemInHand());
-                                    ResultSet rs = SQLiteManager.get().findWeaponData(weapon);
-                                    try {
-                                        if (rs.next()) {
-                                            int effect = rs.getInt("effect");
-                                            if(effect==1){
-                                                AroundEffect aroundEffect = new AroundEffect(player, Effect.SMOKE);
-                                                aroundEffect.startEffect();
+                        if(player.hasPermission("weapon_effects.on")) {
+                            if (AroundEffect.status == false) {
+                                new BukkitRunnable() {
+                                    @Override
+                                    public void run() {
+                                        String weapon = SaveItemStack.ToData(player.getEquipment().getItemInHand());
+                                        ResultSet rs = SQLiteManager.get().findWeaponData(weapon);
+                                        try {
+                                            if (rs.next()) {
+                                                int effect = rs.getInt("effect");
+                                                if (effect == 1) {
+                                                    AroundEffect aroundEffect = new AroundEffect(player, Effect.SMOKE);
+                                                    aroundEffect.startEffect();
+                                                } else if (effect == 2) {
+                                                    AroundEffect aroundEffect = new AroundEffect(player, Effect.MOBSPAWNER_FLAMES);
+                                                    aroundEffect.startEffect();
+                                                } else if (effect == 3) {
+                                                    AroundEffect aroundEffect = new AroundEffect(player, Effect.ENDER_SIGNAL);
+                                                    aroundEffect.startEffect();
+                                                }
                                             }
-                                            else if(effect==2){
-                                                AroundEffect aroundEffect = new AroundEffect(player, Effect.MOBSPAWNER_FLAMES);
-                                                aroundEffect.startEffect();
-                                            }
-                                            else if(effect==3){
-                                                AroundEffect aroundEffect = new AroundEffect(player, Effect.ENDER_SIGNAL);
-                                                aroundEffect.startEffect();
-                                            }
+                                        } catch (SQLException e) {
+                                            e.printStackTrace();
                                         }
-                                    } catch (SQLException e) {
-                                        e.printStackTrace();
+                                        AroundEffect.status = true;
+                                        commandSender.sendMessage("特效开启成功!");
                                     }
-                                    AroundEffect.status = true;
-                                    commandSender.sendMessage("特效开启成功!");
-                                }
-                            }.runTaskAsynchronously(main.plugin);
+                                }.runTaskAsynchronously(main.plugin);
+                            } else {
+                                commandSender.sendMessage("当前特效已开启，请先关闭特效!");
+                            }
                         }
                         else{
-                            commandSender.sendMessage("当前特效已开启，请先关闭特效!");
+                            player.sendMessage("你没有权限！");
                         }
                         return true;
                     } else if (strings[0].equalsIgnoreCase("off")) {//如果是关闭武器特效指令
-                        if(AroundEffect.status==true) {
-                            AroundEffect.status = false;
-                            commandSender.sendMessage("特效关闭成功!");
+                        if(player.hasPermission("weapon_effects.off")) {
+                            if (AroundEffect.status == true) {
+                                AroundEffect.status = false;
+                                commandSender.sendMessage("特效关闭成功!");
+                            } else {
+                                commandSender.sendMessage("当前特效已关闭，请勿重复关闭!");
+                            }
+
                         }
                         else{
-                            commandSender.sendMessage("当前特效已关闭，请勿重复关闭!");
+                            player.sendMessage("你没有权限！");
                         }
                         return true;
                     }
                     else if (strings[0].equalsIgnoreCase("up")) {//如果是赋予武器特效指令
-                        effectInventory.effectGUI(player);
+                        if(player.hasPermission("weapon_effects.up")) {
+                            effectInventory.effectGUI(player);
+                        }
+                        else{
+                            player.sendMessage("你没有权限！");
+                        }
                         return true;
                     }
                 }
