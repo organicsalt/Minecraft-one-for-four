@@ -32,6 +32,8 @@ public class complement_sign implements CommandExecutor {
                     Player player=(Player)commandSender;
                     if(player.hasPermission("complement_sign")) {
                         Calendar cal = Calendar.getInstance();
+                        int year = cal.get(Calendar.YEAR);
+                        int month = cal.get(Calendar.MONTH) + 1;
                         int day = cal.get(Calendar.DATE);
                         List<Integer> dates = new ArrayList<>();
                         new BukkitRunnable() {
@@ -41,7 +43,9 @@ public class complement_sign implements CommandExecutor {
                                     String name = player.getName();
                                     ResultSet rs = SQLiteManager.get().findSignData(name);
                                     while (rs.next()) {
-                                        dates.add(rs.getInt("date"));
+                                        int year_sign = rs.getInt("year");
+                                        int month_sign = rs.getInt("month");
+                                        if(year==year_sign&&month==month_sign) dates.add(rs.getInt("day"));
                                     }
                                     if (dates.size() == day) {
                                         player.sendMessage("你没有可以补签的日子!");
@@ -65,7 +69,7 @@ public class complement_sign implements CommandExecutor {
                                                     break;
                                                 }
                                             }
-                                            SQLiteManager.get().insertData(name, least);
+                                            SQLiteManager.get().insertDateData(name, year, month, least);
                                             player.sendMessage("第" + least + "日补签成功！");
                                             ItemStack itemStack = new ItemStack(Material.GOLD_INGOT);
                                             ItemMeta itemMeta = itemStack.getItemMeta();

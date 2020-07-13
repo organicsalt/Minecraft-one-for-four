@@ -110,13 +110,15 @@ public class SQLiteManager {
         }
     }
 
-    public void insertData(String name, int date){
+    public void insertDateData(String name, int year, int month, int day){
         try {
             PreparedStatement ps;
             String s = SQLCommand.ADD_DATA_SIGN.commandToString();
             ps = connection.prepareStatement(s);
             ps.setString(1, name);
-            ps.setInt(2, date);
+            ps.setInt(2, year);
+            ps.setInt(3, month);
+            ps.setInt(4, day);
             doCommand(ps);
         } catch (SQLException e) {
             e.printStackTrace();
@@ -156,11 +158,12 @@ public class SQLiteManager {
         }
     }
 
-    public void deleteSignData(){
+    public void deleteSignData(int month){
         try {
             PreparedStatement ps;
             String s = SQLCommand.DELETE_DATA_SIGN.commandToString();
             ps = connection.prepareStatement(s);
+            ps.setInt(1, month);
             doCommand(ps);
         } catch (SQLException e) {
             e.printStackTrace();

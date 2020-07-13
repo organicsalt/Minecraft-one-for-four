@@ -28,6 +28,8 @@ public class sign_in implements CommandExecutor{
                 if(player.hasPermission("sign_in")) {
                     if (strings.length == 0) {
                         Calendar cal = Calendar.getInstance();
+                        int year = cal.get(Calendar.YEAR);
+                        int month = cal.get(Calendar.MONTH) + 1;
                         int day = cal.get(Calendar.DATE);
                         List<Integer> dates = new ArrayList<>();
                         new BukkitRunnable() {
@@ -37,12 +39,14 @@ public class sign_in implements CommandExecutor{
                                     String name = player.getName();
                                     ResultSet rs = SQLiteManager.get().findSignData(name);
                                     while (rs.next()) {
-                                        dates.add(rs.getInt("date"));
+                                        int year_sign = rs.getInt("year");
+                                        int month_sign = rs.getInt("month");
+                                        if(year==year_sign&&month==month_sign) dates.add(rs.getInt("day"));
                                     }
                                     if (dates.contains(day)) {
                                         player.sendMessage("今天你已经签过到了!");
                                     } else {
-                                        SQLiteManager.get().insertData(name, day);
+                                        SQLiteManager.get().insertDateData(name, year, month, day);
                                         player.sendMessage("签到成功！");
                                         if (day == 1 || day == 4 || day == 8 || day == 11 || day == 15 || day == 18 || day == 22 || day == 25 || day == 29) {
                                             VIPBonus.getBonus(player, 1, 0, 0);

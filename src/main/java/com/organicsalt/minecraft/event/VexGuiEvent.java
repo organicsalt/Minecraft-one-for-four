@@ -32,6 +32,8 @@ public class VexGuiEvent implements Listener {
         }
         else if(buttonID==16){
             Calendar cal = Calendar.getInstance();
+            int year = cal.get(Calendar.YEAR);
+            int month = cal.get(Calendar.MONTH) + 1;
             int day = cal.get(Calendar.DATE);
             Player player=event.getPlayer();
             List<Integer> dates=new ArrayList<>();
@@ -42,13 +44,15 @@ public class VexGuiEvent implements Listener {
                         String name = player.getName();
                         ResultSet rs = SQLiteManager.get().findSignData(name);
                         while (rs.next()) {
-                            dates.add(rs.getInt("date"));
+                            int year_sign = rs.getInt("year");
+                            int month_sign = rs.getInt("month");
+                            if(year==year_sign&&month==month_sign) dates.add(rs.getInt("day"));
                         }
                         if(dates.contains(day)){
                             player.sendMessage("今天你已经签过到了!");
                         }
                         else{
-                            SQLiteManager.get().insertData(name,day);
+                            SQLiteManager.get().insertDateData(name, year, month, day);
                             player.sendMessage("签到成功！");
                             if(day==1||day==4||day==8||day==11||day==15||day==18||day==22||day==25||day==29){
                                 VIPBonus.getBonus(player,1,0,0);
@@ -92,6 +96,8 @@ public class VexGuiEvent implements Listener {
         }
         else if(buttonID==17){
             Calendar cal = Calendar.getInstance();
+            int year = cal.get(Calendar.YEAR);
+            int month = cal.get(Calendar.MONTH) + 1;
             int day = cal.get(Calendar.DATE);
             Player player=event.getPlayer();
             List<Integer> dates=new ArrayList<>();
@@ -102,7 +108,9 @@ public class VexGuiEvent implements Listener {
                         String name = player.getName();
                         ResultSet rs = SQLiteManager.get().findSignData(name);
                         while (rs.next()) {
-                            dates.add(rs.getInt("date"));
+                            int year_sign = rs.getInt("year");
+                            int month_sign = rs.getInt("month");
+                            if(year==year_sign&&month==month_sign) dates.add(rs.getInt("day"));
                         }
                         if(dates.size()==day){
                             player.sendMessage("你没有可以补签的日子!");
@@ -127,7 +135,7 @@ public class VexGuiEvent implements Listener {
                                         break;
                                     }
                                 }
-                                SQLiteManager.get().insertData(name, least);
+                                SQLiteManager.get().insertDateData(name, year, month, least);
                                 player.sendMessage("第" + least + "日补签成功！");
                                 ItemStack itemStack = new ItemStack(Material.GOLD_INGOT);
                                 ItemMeta itemMeta = itemStack.getItemMeta();

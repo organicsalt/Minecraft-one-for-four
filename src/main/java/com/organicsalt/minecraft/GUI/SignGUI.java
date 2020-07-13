@@ -26,11 +26,13 @@ public class SignGUI {
             String name = player.getName();
             ResultSet rs = SQLiteManager.get().findSignData(name);
             while (rs.next()) {
-                dates.add(rs.getInt("date"));
+                int year_sign = rs.getInt("year");
+                int month_sign = rs.getInt("month");
+                if(year==year_sign&&month==month_sign) dates.add(rs.getInt("day"));
             }
-            if(day==1&&(dates.size()>1||!dates.contains(1))) {
-                SQLiteManager.get().deleteSignData();
-                dates.clear();
+            if(day>=1) {
+                if(month>1) SQLiteManager.get().deleteSignData(month-1);
+                else SQLiteManager.get().deleteSignData(12);
             }
             vexComponents.add(new VexButton(16,"","[local]Sign.png","[local]Sign_.png",20,60,40,40));
             vexComponents.add(new VexButton(17,"","[local]Signa.png","[local]Signa_.png",20,130,40,40));

@@ -30,7 +30,9 @@ public enum SQLCommand {
     CREATE_TABLE_SIGN(
             "CREATE TABLE IF NOT EXISTS `SIGN` (" +
                     "`name` VARCHAR(50)," +
-                    "`date` INT UNSIGNED)"
+                    "`year` INT UNSIGNED," +
+                    "`month` INT UNSIGNED," +
+                    "`day` INT UNSIGNED)"
     ),
 
     CREATE_TABLE_VIP(
@@ -61,8 +63,8 @@ public enum SQLCommand {
 
     ADD_DATA_SIGN(
             "INSERT INTO `SIGN` " +
-                    "(`name`, `date`)" +
-                    "VALUES (?, ?)"
+                    "(`name`, `year`, `month`, `day`)" +
+                    "VALUES (?, ?, ?, ?)"
     ),
 
     ADD_DATA_VIP(
@@ -80,7 +82,7 @@ public enum SQLCommand {
     ),
 
     DELETE_DATA_SIGN(
-            "DELETE FROM `SIGN`"
+            "DELETE FROM `SIGN` WHERE `month` = ?"
     ),
 
     SELECT_DATA_UNION_INFO(
