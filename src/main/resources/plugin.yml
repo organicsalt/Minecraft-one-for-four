@@ -19,7 +19,7 @@ commands:
     permission-message: "你没权限"
   complement_sign:
     description: "这个命令进行补签操作"
-    usage: "使用方法:/complement_sign [date]"
+    usage: "使用方法:/complement_sign"
     permission: "MyPlugin.complement_sign"
     permission-message: "你没权限"
   weapon_effects:
@@ -44,7 +44,7 @@ commands:
     permission-message: "你没权限"
   weapon_upgrade:
     description: "这个命令进行指定武器强化操作"
-    usage: "使用方法:/weapon_upgrade [weapon]"
+    usage: "使用方法:/weapon_upgrade"
     permission: "MyPlugin.weapon_upgrade"
     permission-message: "你没权限"
   union:

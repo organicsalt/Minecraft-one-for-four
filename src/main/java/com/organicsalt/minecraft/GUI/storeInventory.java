@@ -98,12 +98,15 @@ public class storeInventory {
         inventory.setItem(6,itemStack_effects1);
         inventory.setItem(7,itemStack_effects10);
         inventory.setItem(8,itemStack_effects64);
+
         for(int i=9;i<=53;i++){
             if(i!=49){
                 inventory.setItem(i,itemStack_wood);
             }
         }
         inventory.setItem(49,itemStack_button_exit);
+
+
     }
 
 }
