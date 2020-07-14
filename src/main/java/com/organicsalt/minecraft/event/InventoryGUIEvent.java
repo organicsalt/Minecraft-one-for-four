@@ -216,7 +216,7 @@ public class InventoryGUIEvent implements Listener {
                                 int level = 0, effect = 0;
                                 for (ItemStack item : playerInventory.getStorageContents()) {
                                     if (item != null) {
-                                        if (item.hasItemMeta()&&item.getItemMeta().hasLore()) {
+                                        if (item.hasItemMeta()&&item.getItemMeta().hasDisplayName()) {
                                             if (item.getItemMeta().getDisplayName().equals("§e这是装扮石")) {
                                                 count = count + item.getAmount();
                                             }
@@ -316,7 +316,7 @@ public class InventoryGUIEvent implements Listener {
                                 int level = 0, effect = 0;
                                 for (ItemStack item : playerInventory.getStorageContents()) {
                                     if (item != null) {
-                                        if (item.hasItemMeta()&&item.getItemMeta().hasLore()) {
+                                        if (item.hasItemMeta()&&item.getItemMeta().hasDisplayName()) {
                                             if (item.getItemMeta().getDisplayName().equals("§e这是强化石")) {
                                                 count = count + item.getAmount();
                                             }
